@@ -17,15 +17,13 @@ public class DB {
     }
 
     public void InsertFeed(String title, URL url) {
-        String insertSql =
-                "insert into feeds(title, url) " +
-                        "values (:title, :url)";
-        //todo : validate url
         try (Connection con = sql2o.open()) {
-            con.createQuery(insertSql)
+            con.createQuery(Query.INSERT_FEED)
                     .addParameter("title", title)
                     .addParameter("url", url.toString())
                     .executeUpdate();
         }
     }
+
+
 }
