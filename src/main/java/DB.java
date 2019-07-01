@@ -4,7 +4,11 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 public class DB {
     private Sql2o sql2o;
@@ -15,7 +19,14 @@ public class DB {
     }
 
     private DB() {
-        sql2o = new Sql2o("jdbc:mysql://127.0.0.1:3306/rss?useUnicode=true&characterEncoding=UTF-8", "username", "12345678");
+        Properties properties = getProperty("database.properties");
+        sql2o = new Sql2o(
+                String.format("jdbc:mysql://%s:%s/rss?useUnicode=true&characterEncoding=UTF-8",
+                    properties.getProperty("ip"),
+                    properties.getProperty("port")
+                ),
+                properties.getProperty("username"),
+                properties.getProperty("password"));
     }
 
     public void insertFeed(Feed feed) {
@@ -64,6 +75,17 @@ public class DB {
 
     public boolean reportExists(SyndEntry report) {
         return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
+    }
+
+    private static Properties getProperty(String src) {
+        String propertiesPath = Thread.currentThread().getContextClassLoader().getResource(src).getPath();
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(propertiesPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
     }
 
 }
