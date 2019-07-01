@@ -18,8 +18,13 @@ public class RSSUpdater extends Thread {
                 rssFeed = new SyndFeedInput().build(new XmlReader(new URL(feedUrl)));
                 rssFeed.getEntries().forEach(report -> {
                     if (DB.getInstance().reportExists(report)) {
-                        Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink(),
-                                report.getPublishedDate(), report.getDescription().getValue());
+                        Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
+                        try {
+                            newReport.setPubDate(report.getPublishedDate());
+                        } catch (NullPointerException e) {}
+                        try {
+                            newReport.setDescription(report.getDescription().getValue());
+                        } catch (NullPointerException e) {}
                         DB.getInstance().insertReport(newReport);
                     }
                 });
