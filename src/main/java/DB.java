@@ -44,13 +44,20 @@ public class DB {
 
     public void insertReport(Report report) {
         try (Connection con = sql2o.open()) {
-            con.createQuery(Query.INSERT_FEED)
-                    .addParameter("feedId", report.getFeedId())
+            con.createQuery(Query.INSERT_REPORT)
                     .addParameter("title", report.getTitle())
                     .addParameter("link", report.getLink())
                     .addParameter("pubDate", report.getPubDate())
                     .addParameter("description", report.getDescription())
+                    .addParameter("feedId", report.getFeedId())
                     .executeUpdate();
+        }
+    }
+
+    public List<Report> getAllReports() {
+        try(Connection con = sql2o.open()) {
+            return con.createQuery(Query.GET_ALL_REPORTS)
+                    .executeAndFetch(Report.class);
         }
     }
 

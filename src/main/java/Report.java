@@ -8,6 +8,12 @@ public class Report {
     private Date pubDate;
     private String description;
 
+    public Report(int feedId, String title, String link) {
+        this.feedId = feedId;
+        this.title = title;
+        this.link = link;
+    }
+
     public int getFeedId() {
         return feedId;
     }
