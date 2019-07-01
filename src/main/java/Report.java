@@ -14,6 +14,14 @@ public class Report {
         this.link = link;
     }
 
+    public Report(int feedId, String title, String link, Date pubDate, String description) {
+        this.feedId = feedId;
+        this.title = title;
+        this.link = link;
+        this.pubDate = pubDate;
+        this.description = description;
+    }
+
     public int getFeedId() {
         return feedId;
     }

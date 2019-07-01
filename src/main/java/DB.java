@@ -1,4 +1,5 @@
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
@@ -33,6 +34,15 @@ public class DB {
         }
     }
 
+    public List<Report> getSimilarReports(String title, String link) {
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(Query.GET_SIMILAR_REPORTS)
+                    .addParameter("title", title)
+                    .addParameter("link", link)
+                    .executeAndFetch(Report.class);
+        }
+    }
+
     public void insertReport(Report report) {
         try (Connection con = sql2o.open()) {
             con.createQuery(Query.INSERT_REPORT)
@@ -52,6 +62,8 @@ public class DB {
         }
     }
 
-
+    public boolean reportExists(SyndEntry report) {
+        return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
+    }
 
 }
