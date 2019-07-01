@@ -21,9 +21,14 @@ public class Main {
             } catch (IOException | FeedException e) {
                 e.printStackTrace();
             }
-            System.out.println("::::" + feed.getTitle());
-            rssFeed.getEntries().forEach(report -> {
-                System.out.println(report.getTitle());
+            System.out.println("::::" + feed.getTitle() + feed.getId());
+            rssFeed.getEntries().forEach(reportEntry -> {
+                Report report = new Report(feed.getId(),
+                        reportEntry.getTitle(),
+                        reportEntry.getLink());
+                report.setPubDate(reportEntry.getPublishedDate());
+                report.setDescription(reportEntry.getDescription().getValue());
+                DB.getInstance().insertReport(report);
             });
         });
 //        try {
