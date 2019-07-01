@@ -28,7 +28,7 @@ public class Feed {
      * @return title in String
      */
 
-    private static String getTitleOfRSSFeed(String url) {
+    public static String getTitleOfRSSFeed(String url) {
         String title = "RSS Feed Title";
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
