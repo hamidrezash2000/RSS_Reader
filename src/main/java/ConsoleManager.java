@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConsoleManager extends Thread {
     private Scanner scanner = new Scanner(System.in);
@@ -8,10 +10,21 @@ public class ConsoleManager extends Thread {
     public void run() {
         while (true) {
             String command = scanner.nextLine();
-            if (command.matches("print feeds"))
+            if (command.matches("print feeds")) {
                 printFeeds();
-            else if (command.matches("print reports"))
+            } else if (command.matches("print reports")) {
                 printReports();
+            } else if (command.matches("add https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*) to feeds")) {
+                addFeed(command);
+            }
+        }
+    }
+
+    private void addFeed(String command) {
+        Matcher matcher = Pattern.compile("add (?<link>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)) to feeds").matcher(command);
+        if (matcher.find()) {
+            DB.getInstance().insertFeed(
+                    new Feed(matcher.group("link")));
         }
     }
 
