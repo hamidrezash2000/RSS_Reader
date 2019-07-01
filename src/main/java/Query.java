@@ -1,4 +1,5 @@
 public class Query {
     public static final String INSERT_FEED = "insert into feeds(title, url) values (:title, :url)";
-    public static final String GET_ALL_FEEDS = "SELECT title, url FROM feeds";
+    public static final String INSERT_REPORT = "insert into reports(feedId, title, link, pubDate, description) values (:feedId, :title, :link, :pubDate, :description)";
+    public static final String GET_ALL_FEEDS = "SELECT id, title, url FROM feeds";
 }

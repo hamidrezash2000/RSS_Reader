@@ -17,11 +17,11 @@ public class DB {
         sql2o = new Sql2o("jdbc:mysql://127.0.0.1:3306/rss", "username", "12345678");
     }
 
-    public void insertFeed(String title, URL url) {
+    public void insertFeed(Feed feed) {
         try (Connection con = sql2o.open()) {
             con.createQuery(Query.INSERT_FEED)
-                    .addParameter("title", title)
-                    .addParameter("url", url.toString())
+                    .addParameter("title", feed.getTitle())
+                    .addParameter("url", feed.getUrl())
                     .executeUpdate();
         }
     }
@@ -33,6 +33,17 @@ public class DB {
         }
     }
 
+    public void insertReport(Report report) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery(Query.INSERT_FEED)
+                    .addParameter("feedId", report.getFeedId())
+                    .addParameter("title", report.getTitle())
+                    .addParameter("link", report.getLink())
+                    .addParameter("pubDate", report.getPubDate())
+                    .addParameter("description", report.getDescription())
+                    .executeUpdate();
+        }
+    }
 
 
 
