@@ -1,4 +1,5 @@
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
@@ -61,6 +62,8 @@ public class DB {
         }
     }
 
-
+    public boolean reportExists(SyndEntry report) {
+        return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
+    }
 
 }

@@ -1,3 +1,4 @@
+import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -16,10 +17,10 @@ public class RSSUpdater extends Thread {
             try {
                 rssFeed = new SyndFeedInput().build(new XmlReader(new URL(feedUrl)));
                 rssFeed.getEntries().forEach(report -> {
-                    if (DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0) {
-
-//                        Report newReport = new Report();
-//                        DB.getInstance().insertReport();
+                    if (DB.getInstance().reportExists(report)) {
+                        Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink(),
+                                report.getPublishedDate(), report.getDescription().getValue());
+                        DB.getInstance().insertReport(newReport);
                     }
                 });
             } catch (FeedException | IOException e) {
@@ -27,4 +28,6 @@ public class RSSUpdater extends Thread {
             }
         });
     }
+
+
 }
