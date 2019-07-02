@@ -1,12 +1,10 @@
 import org.junit.*;
 
-import static junit.framework.TestCase.assertFalse;
-
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static junit.framework.TestCase.*;
+
 
 public class DBTest {
 
@@ -42,6 +40,20 @@ public class DBTest {
         DB.getInstanceForTest().insertReport(report1);
         assertFalse(DB.getInstanceForTest().reportNotExists(report2.getTitle(), report2.getLink()));
         assertTrue(DB.getInstanceForTest().reportNotExists(report3.getTitle(), report3.getLink()));
+    }
+
+    @Test
+    public void getSimilarReportsTest() {
+        Report report1 = new Report(1, "Test1 Similarity", "http://Test1.com");
+        Report report2 = new Report(2, "Test1 Similarity", "http://Test1.com");
+        Report report3 = new Report(3, "Test1 Similarity", "http://Test1.com");
+        Report report4 = new Report(4, "Test1 Similar", "http://Test1.com");
+        DB.getInstanceForTest().insertReport(report1);
+        DB.getInstanceForTest().insertReport(report2);
+        DB.getInstanceForTest().insertReport(report3);
+        DB.getInstanceForTest().insertReport(report4);
+        List<Report> similarReports = DB.getInstanceForTest().getSimilarReports(report1.getTitle(), report1.getLink());
+        assertEquals(similarReports, Arrays.asList(report1, report2, report3));
     }
 
     @Test
