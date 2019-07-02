@@ -59,4 +59,11 @@ public class Feed {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Feed &&
+                ((Feed) obj).getTitle().equals(title) &&
+                ((Feed) obj).getUrl().equals(url);
+    }
 }
