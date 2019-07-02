@@ -1,7 +1,6 @@
 import org.junit.*;
 
-import java.util.Properties;
-
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 public class DBTest {
@@ -27,6 +26,16 @@ public class DBTest {
         Report report = new Report(1, "Test Report Title", "http://TestURL.URL");
         DB.getInstanceForTest().insertReport(report);
         assertTrue(DB.getInstanceForTest().getAllReports().contains(report));
+    }
+
+    @Test
+    public void reportExistsTest() {
+        Report report1 = new Report(1, "Test Similarity", "http://Test.com");
+        Report report2 = new Report(2, "Test Similarity", "http://Test.com");
+        Report report3 = new Report(3, "Test Similar", "http://Test.com");
+        DB.getInstanceForTest().insertReport(report1);
+        assertFalse(DB.getInstanceForTest().reportNotExists(report2.getTitle(), report2.getLink()));
+        assertTrue(DB.getInstanceForTest().reportNotExists(report3.getTitle(), report3.getLink()));
     }
 
     @AfterClass

@@ -40,7 +40,7 @@ public class RSSUpdater extends Thread {
             }
 
             private void addReportToDatabase(SyndEntry report) {
-                if (DB.getInstance().reportExists(report)) {
+                if (DB.getInstance().reportNotExists(report.getTitle(), report.getLink())) {
                     Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
                     try {
                         newReport.setPubDate(report.getPublishedDate());
