@@ -5,6 +5,8 @@ import org.sql2o.Sql2o;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -76,12 +78,28 @@ public class DB {
         }
     }
 
-    public List<Report> searchReports(String toFind) {
+    /**
+     * Search in Database With Parameters :
+     * @param feedId : id of feed in database
+     * @param toFind : search text
+     * @param lowerBoundDate : lower bound of pubDate
+     * @param upperBoundDate : upper bound of pubDate
+     * @return List Of Reports
+     */
+    public List<Report> searchReports(int feedId, String toFind, Date lowerBoundDate, Date upperBoundDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try (Connection con = sql2o.open()) {
-            String searchQuery = String.format("SELECT feedId, title, link FROM reports WHERE title LIKE '%%%s%%'", toFind);
+            String searchQuery = String.format("SELECT feedId, title, link FROM reports " +
+                    "WHERE feedId = %d AND (title LIKE '%%%s%%' OR description LIKE '%%%s%%') AND (pubDate BETWEEN '%s' AND '%s')",
+                    feedId, toFind, toFind,
+                    dateFormat.format(lowerBoundDate),
+                    dateFormat.format(upperBoundDate));
+            System.out.println(dateFormat.format(lowerBoundDate));
+            System.out.println(dateFormat.format(upperBoundDate));
             return con.createQuery(searchQuery)
                     .executeAndFetch(Report.class);
         }
+
     }
 
     public boolean reportExists(SyndEntry report) {
