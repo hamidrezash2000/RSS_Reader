@@ -1,10 +1,7 @@
-
 import com.rometools.rome.feed.synd.SyndEntry;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
-
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +42,7 @@ public class DB {
     }
 
     public List<Feed> getAllFeeds() {
-        try(Connection con = sql2o.open()) {
+        try (Connection con = sql2o.open()) {
             return con.createQuery(Query.GET_ALL_FEEDS)
                     .executeAndFetch(Feed.class);
         }
@@ -73,8 +70,16 @@ public class DB {
     }
 
     public List<Report> getAllReports() {
-        try(Connection con = sql2o.open()) {
+        try (Connection con = sql2o.open()) {
             return con.createQuery(Query.GET_ALL_REPORTS)
+                    .executeAndFetch(Report.class);
+        }
+    }
+
+    public List<Report> searchReports(String toFind) {
+        try (Connection con = sql2o.open()) {
+            String searchQuery = String.format("SELECT feedId, title, link FROM reports WHERE title LIKE '%%%s%%'", toFind);
+            return con.createQuery(searchQuery)
                     .executeAndFetch(Report.class);
         }
     }
