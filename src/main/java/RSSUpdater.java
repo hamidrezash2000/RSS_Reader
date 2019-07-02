@@ -3,9 +3,12 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import de.l3s.boilerpipe.BoilerpipeProcessingException;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class RSSUpdater extends Thread {
@@ -37,7 +40,7 @@ public class RSSUpdater extends Thread {
             }
 
             private void addReportToDatabase(SyndEntry report) {
-                if (DB.getInstance().reportExists(report)) {
+                if (DB.getInstance().reportNotExists(report.getTitle(), report.getLink())) {
                     Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
                     try {
                         newReport.setPubDate(report.getPublishedDate());
@@ -45,9 +48,12 @@ public class RSSUpdater extends Thread {
                         logger.info("Couldn't find pubDate of report");
                     }
                     try {
-                        newReport.setDescription(report.getDescription().getValue());
+                        String fullTextOfReport = ArticleExtractor.INSTANCE.getText(new URL(report.getLink()));
+                        newReport.setDescription(fullTextOfReport);
                     } catch (NullPointerException e) {
                         logger.info("Couldn't find description of report");
+                    } catch (MalformedURLException | BoilerpipeProcessingException e) {
+                        logger.error(e.getMessage());
                     }
                     DB.getInstance().insertReport(newReport);
                 }

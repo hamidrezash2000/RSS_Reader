@@ -2,6 +2,7 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,26 +13,54 @@ import java.util.Properties;
 
 public class DB {
     private Sql2o sql2o;
-    private static DB ourInstance = new DB();
+    private static DB ourInstance;
     private static Logger logger = Logger.getLogger(DB.class);
 
+    /**
+     * Instance for main program
+     * @return Mysql DB
+     */
     public static DB getInstance() {
+        if (ourInstance == null) {
+            Properties properties = getProperty("database.properties");
+            ourInstance = new DB(
+                    String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8",
+                            properties.getProperty("ip"),
+                            properties.getProperty("port"),
+                            properties.getProperty("database")
+                    ),
+                    properties.getProperty("username"),
+                    properties.getProperty("password")
+            );
+        }
         return ourInstance;
     }
 
     /**
-     * The constructor uses config of database.properties to start a sql connection
+     * Instance for tests
+     * @return H2 DB
      */
-    private DB() {
-        Properties properties = getProperty("database.properties");
-        sql2o = new Sql2o(
-                String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8",
-                    properties.getProperty("ip"),
-                    properties.getProperty("port"),
-                    properties.getProperty("database")
-                ),
-                properties.getProperty("username"),
-                properties.getProperty("password"));
+    public static DB getInstanceForTest() {
+        if (ourInstance == null) {
+            ourInstance = new DB("jdbc:h2:~/rss", null, null);
+        }
+        return ourInstance;
+    }
+
+    /**
+     * set sql2o sql connection
+     * @param connectionURL
+     * @param username
+     * @param password
+     */
+    private DB(String connectionURL, String username, String password) {
+        sql2o = new Sql2o(connectionURL, username, password);
+    }
+
+    public void executeQueryOnTest(String query) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery(query).executeUpdate();
+        }
     }
 
     public void insertFeed(Feed feed) {
@@ -80,8 +109,9 @@ public class DB {
 
     /**
      * Search in Database With Parameters :
-     * @param feedId : id of feed in database
-     * @param toFind : search text
+     *
+     * @param feedId         : id of feed in database
+     * @param toFind         : search text
      * @param lowerBoundDate : lower bound of pubDate
      * @param upperBoundDate : upper bound of pubDate
      * @return List Of Reports
@@ -90,28 +120,27 @@ public class DB {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try (Connection con = sql2o.open()) {
             String searchQuery = String.format("SELECT feedId, title, link FROM reports " +
-                    "WHERE feedId = %d AND (title LIKE '%%%s%%' OR description LIKE '%%%s%%') AND (pubDate BETWEEN '%s' AND '%s')",
+                            "WHERE feedId = %d AND (title LIKE '%%%s%%' OR description LIKE '%%%s%%') AND (pubDate BETWEEN '%s' AND '%s')",
                     feedId, toFind, toFind,
                     dateFormat.format(lowerBoundDate),
                     dateFormat.format(upperBoundDate));
-            System.out.println(dateFormat.format(lowerBoundDate));
-            System.out.println(dateFormat.format(upperBoundDate));
             return con.createQuery(searchQuery)
                     .executeAndFetch(Report.class);
         }
 
     }
 
-    public boolean reportExists(SyndEntry report) {
-        return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
+    public boolean reportNotExists(String title, String link) {
+        return DB.getInstance().getSimilarReports(title, link).size() == 0;
     }
 
     /**
      * this method returns Properties of given source
+     *
      * @param src
      * @return Properties
      */
-    private static Properties getProperty(String src) {
+    public static Properties getProperty(String src) {
         String propertiesPath = Thread.currentThread().getContextClassLoader().getResource(src).getPath();
         Properties properties = new Properties();
         try {
