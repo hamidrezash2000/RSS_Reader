@@ -61,4 +61,11 @@ public class Report {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Report &&
+                ((Report) obj).getTitle().equals(title) &&
+                ((Report) obj).getLink().equals(link);
+    }
 }
