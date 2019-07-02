@@ -1,7 +1,12 @@
 import org.junit.*;
 
 import static junit.framework.TestCase.assertFalse;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class DBTest {
 
@@ -9,14 +14,15 @@ public class DBTest {
     static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL)";
 
     @BeforeClass
-    public static void createTables () {;
+    public static void createTables() {
+        ;
         DB.getInstanceForTest().executeQueryOnTest(createFeedTableQuery);
         DB.getInstanceForTest().executeQueryOnTest(createReportTableQuery);
     }
 
     @Test
     public void insertFeedTest() {
-        Feed feed = new Feed("Test Title", "http://TestURL.URL");
+        Feed feed = new Feed("فارسی", "http://TestURL.URL");
         DB.getInstanceForTest().insertFeed(feed);
         assertTrue(DB.getInstanceForTest().getAllFeeds().contains(feed));
     }
@@ -36,6 +42,18 @@ public class DBTest {
         DB.getInstanceForTest().insertReport(report1);
         assertFalse(DB.getInstanceForTest().reportNotExists(report2.getTitle(), report2.getLink()));
         assertTrue(DB.getInstanceForTest().reportNotExists(report3.getTitle(), report3.getLink()));
+    }
+
+    @Test
+    public void getAllFeedsTest() {
+        Feed feed1 = new Feed("Test Title 1", "http://TestURL1.URL");
+        Feed feed2 = new Feed("Test Title 2", "http://TestURL2.URL");
+        Feed feed3 = new Feed("Test Title 3", "http://TestURL3.URL");
+        DB.getInstanceForTest().insertFeed(feed1);
+        DB.getInstanceForTest().insertFeed(feed2);
+        DB.getInstanceForTest().insertFeed(feed3);
+        final List<Feed> allReports = DB.getInstanceForTest().getAllFeeds();
+        assertTrue(allReports.containsAll(Arrays.asList(feed1, feed2, feed3)));
     }
 
     @AfterClass
