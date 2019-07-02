@@ -54,6 +54,12 @@ public class DB {
         sql2o = new Sql2o(connectionURL, username, password);
     }
 
+    public void executeQueryOnTest(String query) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery(query).executeUpdate();
+        }
+    }
+
     public void insertFeed(Feed feed) {
         try (Connection con = sql2o.open()) {
             con.createQuery(Query.INSERT_FEED)
@@ -131,7 +137,7 @@ public class DB {
      * @param src
      * @return Properties
      */
-    private static Properties getProperty(String src) {
+    public static Properties getProperty(String src) {
         String propertiesPath = Thread.currentThread().getContextClassLoader().getResource(src).getPath();
         Properties properties = new Properties();
         try {
