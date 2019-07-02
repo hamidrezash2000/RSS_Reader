@@ -3,12 +3,13 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class RSSUpdater extends Thread {
-
+    private static Logger logger = Logger.getLogger(RSSUpdater.class);
 
     @Override
     public void run() {
@@ -17,7 +18,7 @@ public class RSSUpdater extends Thread {
             try {
                 sleep(60000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -31,7 +32,7 @@ public class RSSUpdater extends Thread {
                             new XmlReader(new URL(feed.getUrl())));
                     rssFeed.getEntries().forEach(this::addReportToDatabase);
                 } catch (FeedException | IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
 
@@ -41,12 +42,12 @@ public class RSSUpdater extends Thread {
                     try {
                         newReport.setPubDate(report.getPublishedDate());
                     } catch (NullPointerException e) {
-
+                        logger.info("Couldn't find pubDate of report");
                     }
                     try {
                         newReport.setDescription(report.getDescription().getValue());
                     } catch (NullPointerException e) {
-
+                        logger.info("Couldn't find description of report");
                     }
                     DB.getInstance().insertReport(newReport);
                 }

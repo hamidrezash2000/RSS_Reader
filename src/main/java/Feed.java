@@ -12,6 +12,8 @@ public class Feed {
     private int id;
     private String title;
     private String url;
+    private static Logger logger = Logger.getLogger(Feed.class);
+
 
     public Feed(String title, String url) {
         this.title = title;
@@ -27,14 +29,13 @@ public class Feed {
      * @param url to search for title
      * @return title in String
      */
-
     public static String getTitleOfRSSFeed(String url) {
         String title = "RSS Feed Title";
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
             title = rssFeed.getTitle();
         } catch (FeedException | IOException e) {
-
+            logger.info("Couldn't find title of RSS feed");
         }
         return title;
     }

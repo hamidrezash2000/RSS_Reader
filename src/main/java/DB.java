@@ -1,5 +1,6 @@
 
 import com.rometools.rome.feed.synd.SyndEntry;
+import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
@@ -13,17 +14,22 @@ import java.util.Properties;
 public class DB {
     private Sql2o sql2o;
     private static DB ourInstance = new DB();
+    private static Logger logger = Logger.getLogger(DB.class);
 
     public static DB getInstance() {
         return ourInstance;
     }
 
+    /**
+     * The constructor uses config of database.properties to start a sql connection
+     */
     private DB() {
         Properties properties = getProperty("database.properties");
         sql2o = new Sql2o(
-                String.format("jdbc:mysql://%s:%s/rss?useUnicode=true&characterEncoding=UTF-8",
+                String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8",
                     properties.getProperty("ip"),
-                    properties.getProperty("port")
+                    properties.getProperty("port"),
+                    properties.getProperty("database")
                 ),
                 properties.getProperty("username"),
                 properties.getProperty("password"));
@@ -77,13 +83,18 @@ public class DB {
         return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
     }
 
+    /**
+     * this method returns Properties of given source
+     * @param src
+     * @return Properties
+     */
     private static Properties getProperty(String src) {
         String propertiesPath = Thread.currentThread().getContextClassLoader().getResource(src).getPath();
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(propertiesPath));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Couldn't load properties source");
         }
         return properties;
     }
