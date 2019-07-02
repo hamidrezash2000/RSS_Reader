@@ -48,7 +48,10 @@ public class DB {
     }
 
     /**
-     * The constructor uses config of database.properties to start a sql connection
+     * set sql2o sql connection
+     * @param connectionURL
+     * @param username
+     * @param password
      */
     private DB(String connectionURL, String username, String password) {
         sql2o = new Sql2o(connectionURL, username, password);
