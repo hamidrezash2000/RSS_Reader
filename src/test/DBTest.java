@@ -57,6 +57,16 @@ public class DBTest {
         assertTrue(allReports.containsAll(Arrays.asList(report1, report2, report3)));
     }
 
+    @Test
+    public void getSimilarReportsTest() {
+        Report duplicateReport1 = new Report(1, "Test Duplicate Report Title 1", "http://TestURL1.URL");
+        Report duplicateReport2 = new Report(1, "Test Duplicate Report Title 2", "http://TestURL2.URL");
+        DB.getInstanceForTest().insertReport(duplicateReport1);
+        DB.getInstanceForTest().insertReport(duplicateReport2);
+        final List<Report> similarReports = DB.getInstanceForTest().getAllReports();
+        assertTrue(similarReports.containsAll(Arrays.asList(duplicateReport1, duplicateReport2)));
+    }
+
     @AfterClass
     public static void deleteTables() {
         DB.getInstanceForTest().executeQueryOnTest("DROP TABLE feeds");
