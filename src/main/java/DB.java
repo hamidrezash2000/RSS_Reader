@@ -32,26 +32,13 @@ public class DB {
         if (ourInstance == null) {
             Properties properties = PropertiesManager.getProperty(PropertiesManager.DATABASSE);
             ourInstance = new DB(
-                    String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8",
-                            properties.getProperty("ip"),
-                            properties.getProperty("port"),
+                    String.format("jdbc:%s/%s?useUnicode=true&characterEncoding=UTF-8",
+                            properties.getProperty("address"),
                             properties.getProperty("database")
                     ),
                     properties.getProperty("username"),
                     properties.getProperty("password")
             );
-        }
-        return ourInstance;
-    }
-
-    /**
-     * Instance for tests
-     *
-     * @return H2 DB
-     */
-    public static DB getInstanceForTest() {
-        if (ourInstance == null) {
-            ourInstance = new DB("jdbc:h2:~/rss", null, null);
         }
         return ourInstance;
     }

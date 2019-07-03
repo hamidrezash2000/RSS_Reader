@@ -16,29 +16,28 @@ public class DBTest {
 
     @BeforeClass
     public static void createTables() {
-        ;
-        DB.getInstanceForTest().executeQueryOnTest(createFeedTableQuery);
-        DB.getInstanceForTest().executeQueryOnTest(createReportTableQuery);
+        DB.getInstance().executeQueryOnTest(createFeedTableQuery);
+        DB.getInstance().executeQueryOnTest(createReportTableQuery);
     }
 
     @AfterClass
     public static void deleteTables() {
-        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE feeds");
-        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE reports");
+        DB.getInstance().executeQueryOnTest("DROP TABLE feeds");
+        DB.getInstance().executeQueryOnTest("DROP TABLE reports");
     }
 
     @Test
     public void insertFeedTest() {
         Feed feed = new Feed("فارسی", "http://TestURL.URL");
-        DB.getInstanceForTest().insertFeed(feed);
-        assertTrue(DB.getInstanceForTest().getAllFeeds().contains(feed));
+        DB.getInstance().insertFeed(feed);
+        assertTrue(DB.getInstance().getAllFeeds().contains(feed));
     }
 
     @Test
     public void insertReportTest() {
         Report report = new Report(1, "Test Report Title", "http://TestURL.URL");
-        DB.getInstanceForTest().insertReport(report);
-        assertTrue(DB.getInstanceForTest().getAllReports().contains(report));
+        DB.getInstance().insertReport(report);
+        assertTrue(DB.getInstance().getAllReports().contains(report));
     }
 
     @Test
@@ -46,9 +45,9 @@ public class DBTest {
         Report report1 = new Report(1, "Test Similarity", "http://Test.com");
         Report report2 = new Report(2, "Test Similarity", "http://Test.com");
         Report report3 = new Report(3, "Test Similar", "http://Test.com");
-        DB.getInstanceForTest().insertReport(report1);
-        assertFalse(DB.getInstanceForTest().reportNotExists(report2.getTitle(), report2.getLink()));
-        assertTrue(DB.getInstanceForTest().reportNotExists(report3.getTitle(), report3.getLink()));
+        DB.getInstance().insertReport(report1);
+        assertFalse(DB.getInstance().reportNotExists(report2.getTitle(), report2.getLink()));
+        assertTrue(DB.getInstance().reportNotExists(report3.getTitle(), report3.getLink()));
     }
 
     @Test
@@ -57,11 +56,11 @@ public class DBTest {
         Report report2 = new Report(2, "Test1 Similarity", "http://Test1.com");
         Report report3 = new Report(3, "Test1 Similarity", "http://Test1.com");
         Report report4 = new Report(4, "Test1 Similar", "http://Test1.com");
-        DB.getInstanceForTest().insertReport(report1);
-        DB.getInstanceForTest().insertReport(report2);
-        DB.getInstanceForTest().insertReport(report3);
-        DB.getInstanceForTest().insertReport(report4);
-        List<Report> similarReports = DB.getInstanceForTest().getSimilarReports(report1.getTitle(), report1.getLink());
+        DB.getInstance().insertReport(report1);
+        DB.getInstance().insertReport(report2);
+        DB.getInstance().insertReport(report3);
+        DB.getInstance().insertReport(report4);
+        List<Report> similarReports = DB.getInstance().getSimilarReports(report1.getTitle(), report1.getLink());
         assertEquals(similarReports, Arrays.asList(report1, report2, report3));
     }
 
@@ -70,10 +69,10 @@ public class DBTest {
         Feed feed1 = new Feed("Test Title 1", "http://TestURL1.URL");
         Feed feed2 = new Feed("Test Title 2", "http://TestURL2.URL");
         Feed feed3 = new Feed("Test Title 3", "http://TestURL3.URL");
-        DB.getInstanceForTest().insertFeed(feed1);
-        DB.getInstanceForTest().insertFeed(feed2);
-        DB.getInstanceForTest().insertFeed(feed3);
-        final List<Feed> allFeeds = DB.getInstanceForTest().getAllFeeds();
+        DB.getInstance().insertFeed(feed1);
+        DB.getInstance().insertFeed(feed2);
+        DB.getInstance().insertFeed(feed3);
+        final List<Feed> allFeeds = DB.getInstance().getAllFeeds();
         assertTrue(allFeeds.containsAll(Arrays.asList(feed1, feed2, feed3)));
     }
 
@@ -82,10 +81,10 @@ public class DBTest {
         Report report1 = new Report(1, "Test Report Title 1", "http://TestURL1.URL");
         Report report2 = new Report(2, "Test Report Title 2", "http://TestURL2.URL");
         Report report3 = new Report(3, "Test Report Title 3", "http://TestURL3.URL");
-        DB.getInstanceForTest().insertReport(report1);
-        DB.getInstanceForTest().insertReport(report2);
-        DB.getInstanceForTest().insertReport(report3);
-        final List<Report> allReports = DB.getInstanceForTest().getAllReports();
+        DB.getInstance().insertReport(report1);
+        DB.getInstance().insertReport(report2);
+        DB.getInstance().insertReport(report3);
+        final List<Report> allReports = DB.getInstance().getAllReports();
         assertTrue(allReports.containsAll(Arrays.asList(report1, report2, report3)));
     }
 
@@ -97,10 +96,10 @@ public class DBTest {
                 new GregorianCalendar(2005, 1, 1).getTime(), "Description 2");
         Report reportToSearch3 = new Report(1, "Test Duplicate Report Title 3", "http://TestURL3.URL",
                 new GregorianCalendar(2003, 1, 1).getTime(), "Description 3");
-        DB.getInstanceForTest().insertReport(reportToSearch1);
-        DB.getInstanceForTest().insertReport(reportToSearch2);
-        DB.getInstanceForTest().insertReport(reportToSearch3);
-        final List<Report> searchedReports = DB.getInstanceForTest()
+        DB.getInstance().insertReport(reportToSearch1);
+        DB.getInstance().insertReport(reportToSearch2);
+        DB.getInstance().insertReport(reportToSearch3);
+        final List<Report> searchedReports = DB.getInstance()
                 .searchReports(1, "Test Duplicate Report Title",
                         new GregorianCalendar(2000, 1, 1).getTime(),
                         new GregorianCalendar(2004, 1, 1).getTime());
