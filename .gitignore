@@ -9,7 +9,8 @@
 # User-specific stuff
 logs/
 .idea/
-.target/
+target/
+
 RSS_Reader.iml
 .idea/**/workspace.xml
 .idea/**/tasks.xml
