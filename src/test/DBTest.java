@@ -12,12 +12,20 @@ import static junit.framework.TestCase.*;
 public class DBTest {
 
     static final String createFeedTableQuery = "CREATE TABLE feeds (id INTEGER PRIMARY KEY AUTO_INCREMENT, title TEXT, url TEXT)";
-    static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL)";
+    static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL, FOREIGN KEY (feedId) REFERENCES feeds(id) ON DELETE CASCADE)";
 
     @BeforeClass
     public static void createTables() {
         DB.getInstance().executeQueryOnTest(createFeedTableQuery);
         DB.getInstance().executeQueryOnTest(createReportTableQuery);
+        DB.getInstance().insertFeed(
+                new Feed("Feed", "http://Feed.URL"));
+        DB.getInstance().insertFeed(
+                new Feed("Feed", "http://Feed.URL"));
+        DB.getInstance().insertFeed(
+                new Feed("Feed", "http://Feed.URL"));
+        DB.getInstance().insertFeed(
+                new Feed("Feed", "http://Feed.URL"));
     }
 
     @AfterClass
