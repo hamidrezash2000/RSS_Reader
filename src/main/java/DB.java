@@ -22,7 +22,7 @@ public class DB {
      */
     public static DB getInstance() {
         if (ourInstance == null) {
-            Properties properties = getProperty("database.properties");
+            Properties properties = PropertiesManager.getProperty(PropertiesManager.DATABASSE);
             ourInstance = new DB(
                     String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8",
                             properties.getProperty("ip"),
@@ -132,23 +132,6 @@ public class DB {
 
     public boolean reportExists(SyndEntry report) {
         return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
-    }
-
-    /**
-     * this method returns Properties of given source
-     *
-     * @param src
-     * @return Properties
-     */
-    public static Properties getProperty(String src) {
-        String propertiesPath = Thread.currentThread().getContextClassLoader().getResource(src).getPath();
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(propertiesPath));
-        } catch (IOException e) {
-            logger.debug("Couldn't load properties source");
-        }
-        return properties;
     }
 
 }

@@ -11,4 +11,11 @@ public class MainTest {
         String titleOfRSSFeed = Feed.getTitleOfRSSFeed(url);
         assertEquals(title, titleOfRSSFeed);
     }
+
+    @Test
+    public void getPropertyTest() {
+        PropertiesManager.getProperty(PropertiesManager.DATABASSE).put("property-test-key", "property-test-value");
+        assertTrue(PropertiesManager.getProperty(PropertiesManager.DATABASSE).getProperty("property-test-key").equals("property-test-value"));
+//        PropertiesManager.getProperty(PropertiesManager.DATABASSE).remove("property-test-key");
+    }
 }

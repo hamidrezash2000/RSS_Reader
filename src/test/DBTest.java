@@ -60,12 +60,12 @@ public class DBTest {
 
     @Test
     public void getSimilarReportsTest() {
-        Report duplicateReport1 = new Report(1, "Test Duplicate Report Title 1", "http://TestURL1.URL");
-        Report duplicateReport2 = new Report(1, "Test Duplicate Report Title 2", "http://TestURL2.URL");
+        Report duplicateReport1 = new Report(1, "Test Duplicate Report Title", "http://TestURL.URL");
+        Report duplicateReport2 = new Report(1, "Test Duplicate Report Title", "http://TestURL.URL");
         DB.getInstanceForTest().insertReport(duplicateReport1);
         DB.getInstanceForTest().insertReport(duplicateReport2);
-        final List<Report> similarReports = DB.getInstanceForTest().getAllReports();
-        assertTrue(similarReports.containsAll(Arrays.asList(duplicateReport1, duplicateReport2)));
+        final List<Report> similarReports = DB.getInstanceForTest().getSimilarReports("Test Duplicate Report Title", "http://TestURL.URL");
+        assertTrue(similarReports.containsAll(Arrays.asList(duplicateReport1, duplicateReport2)) && similarReports.size() == 2);
     }
 
     @Test
