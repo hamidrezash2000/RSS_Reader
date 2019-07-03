@@ -82,16 +82,6 @@ public class DBTest {
     }
 
     @Test
-    public void getSimilarReportsTest() {
-        Report duplicateReport1 = new Report(1, "Test Duplicate Report Title", "http://TestURL.URL");
-        Report duplicateReport2 = new Report(1, "Test Duplicate Report Title", "http://TestURL.URL");
-        DB.getInstanceForTest().insertReport(duplicateReport1);
-        DB.getInstanceForTest().insertReport(duplicateReport2);
-        final List<Report> similarReports = DB.getInstanceForTest().getSimilarReports("Test Duplicate Report Title", "http://TestURL.URL");
-        assertTrue(similarReports.containsAll(Arrays.asList(duplicateReport1, duplicateReport2)) && similarReports.size() == 2);
-    }
-
-    @Test
     public void searchReportsPubDateTest() {
         Report reportToSearch1 = new Report(1, "Test Duplicate Report Title 1", "http://TestURL1.URL",
                 new GregorianCalendar(2000, 1 , 1).getTime(), "Description 1");
