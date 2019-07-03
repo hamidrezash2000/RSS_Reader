@@ -24,7 +24,7 @@ public class DB {
     }
 
     /**
-     * Instance for main program
+     * Instance Of DB Class
      *
      * @return Mysql DB
      */
