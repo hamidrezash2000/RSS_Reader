@@ -1,23 +1,31 @@
-import com.rometools.rome.feed.synd.SyndEntry;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 public class DB {
-    private Sql2o sql2o;
     private static DB ourInstance;
     private static Logger logger = Logger.getLogger(DB.class);
+    private Sql2o sql2o;
+
+    /**
+     * set sql2o sql connection
+     *
+     * @param connectionURL
+     * @param username
+     * @param password
+     */
+    private DB(String connectionURL, String username, String password) {
+        sql2o = new Sql2o(connectionURL, username, password);
+    }
 
     /**
      * Instance for main program
+     *
      * @return Mysql DB
      */
     public static DB getInstance() {
@@ -38,6 +46,7 @@ public class DB {
 
     /**
      * Instance for tests
+     *
      * @return H2 DB
      */
     public static DB getInstanceForTest() {
@@ -45,16 +54,6 @@ public class DB {
             ourInstance = new DB("jdbc:h2:~/rss", null, null);
         }
         return ourInstance;
-    }
-
-    /**
-     * set sql2o sql connection
-     * @param connectionURL
-     * @param username
-     * @param password
-     */
-    private DB(String connectionURL, String username, String password) {
-        sql2o = new Sql2o(connectionURL, username, password);
     }
 
     public void executeQueryOnTest(String query) {

@@ -1,4 +1,6 @@
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -17,6 +19,12 @@ public class DBTest {
         ;
         DB.getInstanceForTest().executeQueryOnTest(createFeedTableQuery);
         DB.getInstanceForTest().executeQueryOnTest(createReportTableQuery);
+    }
+
+    @AfterClass
+    public static void deleteTables() {
+        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE feeds");
+        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE reports");
     }
 
     @Test
@@ -84,25 +92,19 @@ public class DBTest {
     @Test
     public void searchReportsPubDateTest() {
         Report reportToSearch1 = new Report(1, "Test Duplicate Report Title 1", "http://TestURL1.URL",
-                new GregorianCalendar(2000, 1 , 1).getTime(), "Description 1");
+                new GregorianCalendar(2000, 1, 1).getTime(), "Description 1");
         Report reportToSearch2 = new Report(1, "Test Duplicate Report Title 2", "http://TestURL2.URL",
-                new GregorianCalendar(2005, 1 , 1).getTime(), "Description 2");
+                new GregorianCalendar(2005, 1, 1).getTime(), "Description 2");
         Report reportToSearch3 = new Report(1, "Test Duplicate Report Title 3", "http://TestURL3.URL",
-                new GregorianCalendar(2003, 1 , 1).getTime(), "Description 3");
+                new GregorianCalendar(2003, 1, 1).getTime(), "Description 3");
         DB.getInstanceForTest().insertReport(reportToSearch1);
         DB.getInstanceForTest().insertReport(reportToSearch2);
         DB.getInstanceForTest().insertReport(reportToSearch3);
         final List<Report> searchedReports = DB.getInstanceForTest()
                 .searchReports(1, "Test Duplicate Report Title",
-                        new GregorianCalendar(2000, 1 , 1).getTime(),
-                        new GregorianCalendar(2004, 1 , 1).getTime());
+                        new GregorianCalendar(2000, 1, 1).getTime(),
+                        new GregorianCalendar(2004, 1, 1).getTime());
 
         assertTrue(searchedReports.containsAll(Arrays.asList(reportToSearch1, reportToSearch3)) && !searchedReports.contains(reportToSearch2));
-    }
-
-    @AfterClass
-    public static void deleteTables() {
-        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE feeds");
-        DB.getInstanceForTest().executeQueryOnTest("DROP TABLE reports");
     }
 }

@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesManager {
-    private static Logger logger = Logger.getLogger(PropertiesManager.class);
-
     public static final String DATABASSE = "database.properties";
+    private static Logger logger = Logger.getLogger(PropertiesManager.class);
 
     /**
      * this method returns Properties of given source
