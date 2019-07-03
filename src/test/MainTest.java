@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 public class MainTest {
     @Test
     public void getTitleOfRSSFeedTest() {
-        final String url = "https://www.tasnimnews.com/fa/rss/feed/0/7";
-        final String title = "آخرین اخبار, اخبار روز";
+        final String url = Thread.currentThread().getContextClassLoader().getResource("feed-title-test.xml").toString();
+        final String title = "تیتر تست خبر";
         String titleOfRSSFeed = Feed.getTitleOfRSSFeed(url);
         assertEquals(title, titleOfRSSFeed);
     }
