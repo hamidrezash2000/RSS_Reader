@@ -130,8 +130,8 @@ public class DB {
 
     }
 
-    public boolean reportExists(SyndEntry report) {
-        return DB.getInstance().getSimilarReports(report.getTitle(), report.getLink()).size() == 0;
+    public boolean reportNotExists(String title, String link) {
+        return DB.getInstance().getSimilarReports(title, link).size() == 0;
     }
 
 }
