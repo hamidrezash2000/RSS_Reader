@@ -1,11 +1,6 @@
-import com.rometools.rome.feed.synd.SyndEntry;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +13,7 @@ public class DB {
 
     /**
      * Instance for main program
+     *
      * @return Mysql DB
      */
     public static DB getInstance() {
@@ -38,6 +34,7 @@ public class DB {
 
     /**
      * Instance for tests
+     *
      * @return H2 DB
      */
     public static DB getInstanceForTest() {
@@ -49,6 +46,7 @@ public class DB {
 
     /**
      * set sql2o sql connection
+     *
      * @param connectionURL
      * @param username
      * @param password

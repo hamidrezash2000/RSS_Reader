@@ -6,7 +6,6 @@ import com.rometools.rome.io.XmlReader;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;

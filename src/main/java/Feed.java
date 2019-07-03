@@ -3,8 +3,6 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.apache.log4j.Logger;
-import org.apache.log4j.lf5.Log4JLogRecord;
-
 import java.io.IOException;
 import java.net.URL;
 
