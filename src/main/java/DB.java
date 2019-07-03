@@ -96,24 +96,14 @@ public class DB {
     /**
      * Search in Database With Parameters :
      *
-     * @param feedId         : id of feed in database
-     * @param toFind         : search text
-     * @param lowerBoundDate : lower bound of pubDate
-     * @param upperBoundDate : upper bound of pubDate
+     * @param searchQuery : SearchQuery Object
      * @return List Of Reports
      */
-    public List<Report> searchReports(int feedId, String toFind, Date lowerBoundDate, Date upperBoundDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public List<Report> searchReports(SearchQuery searchQuery) {
         try (Connection con = sql2o.open()) {
-            String searchQuery = String.format("SELECT feedId, title, link FROM reports " +
-                            "WHERE feedId = %d AND (title LIKE '%%%s%%' OR description LIKE '%%%s%%') AND (pubDate BETWEEN '%s' AND '%s')",
-                    feedId, toFind, toFind,
-                    dateFormat.format(lowerBoundDate),
-                    dateFormat.format(upperBoundDate));
-            return con.createQuery(searchQuery)
+            return con.createQuery(searchQuery.generateQuery())
                     .executeAndFetch(Report.class);
         }
-
     }
 
     public boolean reportNotExists(String title, String link) {

@@ -9,7 +9,7 @@ public class SearchQuery {
     Optional<Integer> feedId = Optional.empty();
 
     public String generateQuery() {
-        StringBuilder res = new StringBuilder("SELECT feedId, title, link FROM reports ");
+        StringBuilder res = new StringBuilder("SELECT feedId, title, link FROM reports WHERE ");
         boolean anyConditionAdded = false;
         if (title.isPresent()) {
             res.append(anyConditionAdded ? "AND " : "");
@@ -28,7 +28,7 @@ public class SearchQuery {
         }
         if (feedId.isPresent()) {
             res.append(anyConditionAdded ? "AND " : "");
-            res.append(String.format("WHERE feedId = %d ", feedId.get()));
+            res.append(String.format("feedId = %d ", feedId.get()));
         }
         return res.toString();
     }
@@ -38,7 +38,7 @@ public class SearchQuery {
     }
 
     public void setTitle(String title) {
-        this.title = Optional.of(title);
+        this.title = Optional.ofNullable(title);
     }
 
     public String getDescription() {
@@ -46,7 +46,7 @@ public class SearchQuery {
     }
 
     public void setDescription(String description) {
-        this.description = Optional.of(description);
+        this.description = Optional.ofNullable(description);
     }
 
     public Date getLowerBound() {
@@ -54,8 +54,8 @@ public class SearchQuery {
     }
 
     public void setLowerAndUpperBound(Date lowerBound, Date upperBound) {
-        this.lowerBound = Optional.of(lowerBound);
-        this.upperBound = Optional.of(upperBound);
+        this.lowerBound = Optional.ofNullable(lowerBound);
+        this.upperBound = Optional.ofNullable(upperBound);
     }
 
     public Date getUpperBound() {
@@ -67,6 +67,6 @@ public class SearchQuery {
     }
 
     public void setFeedId(int feedId) {
-        this.feedId = Optional.of(feedId);
+        this.feedId = Optional.ofNullable(feedId);
     }
 }

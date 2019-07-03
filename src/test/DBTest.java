@@ -99,11 +99,11 @@ public class DBTest {
         DB.getInstance().insertReport(reportToSearch1);
         DB.getInstance().insertReport(reportToSearch2);
         DB.getInstance().insertReport(reportToSearch3);
+        SearchQuery searchQuery = new SearchQuery();
+        searchQuery.setLowerAndUpperBound(new GregorianCalendar(2000, 1, 1).getTime(),
+                new GregorianCalendar(2004, 1, 1).getTime());
         final List<Report> searchedReports = DB.getInstance()
-                .searchReports(1, "Test Duplicate Report Title",
-                        new GregorianCalendar(2000, 1, 1).getTime(),
-                        new GregorianCalendar(2004, 1, 1).getTime());
-
+                .searchReports(searchQuery);
         assertTrue(searchedReports.containsAll(Arrays.asList(reportToSearch1, reportToSearch3)) && !searchedReports.contains(reportToSearch2));
     }
 }
