@@ -3,16 +3,15 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.apache.log4j.Logger;
-import org.apache.log4j.lf5.Log4JLogRecord;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class Feed {
+    private static Logger logger = Logger.getLogger(Feed.class);
     private int id;
     private String title;
     private String url;
-    private static Logger logger = Logger.getLogger(Feed.class);
 
 
     public Feed(String title, String url) {
@@ -26,6 +25,7 @@ public class Feed {
 
     /**
      * Pass a url to function and it returns the title of the rss feed.
+     *
      * @param url to search for title
      * @return title in String
      */
