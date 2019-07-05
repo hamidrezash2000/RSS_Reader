@@ -1,3 +1,5 @@
+package database;
+
 public class Query {
     public static final String INSERT_FEED = "insert into feeds(title, url) values (:title, :url)";
     public static final String INSERT_REPORT = "insert into reports(feedId, title, link, pubDate, description) values (:feedId, :title, :link, :pubDate, :description)";
