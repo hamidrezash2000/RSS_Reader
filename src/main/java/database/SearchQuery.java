@@ -12,7 +12,7 @@ public class SearchQuery {
 
     public String generateQuery() {
         // todo for an empty condition this query is not valid
-        StringBuilder res = new StringBuilder("SELECT feedId, title, link FROM reports WHERE ");
+        StringBuilder res = new StringBuilder("SELECT feedId, title, link, pubDate, description FROM reports WHERE ");
         boolean anyConditionAdded = false;
         if (title.isPresent()) {
             res.append(anyConditionAdded ? "AND " : "");
