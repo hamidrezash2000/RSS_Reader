@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class RSSFetcher implements Runnable {
+
     private static Logger logger = Logger.getLogger(RSSUpdater.class);
     private Feed feed;
 
@@ -24,6 +25,7 @@ public class RSSFetcher implements Runnable {
 
     @Override
     public void run() {
+        RSSUpdater.fetcherMetric.mark();
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(
                     new XmlReader(new URL(feed.getUrl())));
