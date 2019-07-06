@@ -1,3 +1,5 @@
+package database;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -9,7 +11,8 @@ public class SearchQuery {
     Optional<Integer> feedId = Optional.empty();
 
     public String generateQuery() {
-        StringBuilder res = new StringBuilder("SELECT feedId, title, link FROM reports WHERE ");
+        // todo for an empty condition this query is not valid
+        StringBuilder res = new StringBuilder("SELECT feedId, title, link, pubDate, description FROM reports WHERE ");
         boolean anyConditionAdded = false;
         if (title.isPresent()) {
             res.append(anyConditionAdded ? "AND " : "");

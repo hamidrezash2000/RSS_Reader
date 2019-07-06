@@ -1,3 +1,6 @@
+import database.DB;
+import model.Feed;
+import model.Report;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
--- Host: localhost    Database: rss
+-- Host: localhost    database: rss
 -- ------------------------------------------------------
 -- Server version	5.7.26-0ubuntu0.18.04.1
 
@@ -42,9 +42,10 @@ CREATE TABLE `reports` (
   `link` text CHARACTER SET utf8 COLLATE utf8_persian_ci,
   `pubDate` datetime DEFAULT NULL,
   `description` text CHARACTER SET utf8 COLLATE utf8_persian_ci,
-  `feedId` int(11) DEFAULT NULL,
+  `feedId` int(11),
   `title` text CHARACTER SET utf8 COLLATE utf8_persian_ci,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`feedId`) REFERENCES feeds(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3257 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
