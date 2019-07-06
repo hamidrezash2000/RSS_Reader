@@ -7,10 +7,21 @@
   - Extract main content of report from report link
   - Search in reports by feed, title, description, publishedDate
 
-#### Installation
+#### Installation :
 
 - Use maven to install the dependencies.
 - Install database using schema.sql
 - Config database.properties
 - Start using it :)
 
+#### How To Search :
+Use search in commandline with these attributes and format :
+- -title:[title]
+- -description:[description]
+- -feedId:[feedId]
+- -pubDate:[dateLowerBound>dateUpperBound]
+
+example : 
+```
+search -title:خبر -feedId:2 -pubDate:2000/02/23>2002/05/03
+```
