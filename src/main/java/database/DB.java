@@ -61,6 +61,17 @@ public class DB {
         }
     }
 
+    public void removeFeedWithReports(int feedId) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery(Query.REMOVE_FEED)
+                    .addParameter("id", feedId)
+                    .executeUpdate()
+                    .createQuery(Query.REMOVE_FEEDS_REPORTS)
+                    .addParameter("feedId", feedId)
+                    .executeUpdate();
+        }
+    }
+
     public List<Feed> getAllFeeds() {
         try (Connection con = sql2o.open()) {
             return con.createQuery(Query.GET_ALL_FEEDS)

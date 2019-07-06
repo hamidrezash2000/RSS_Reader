@@ -6,14 +6,13 @@ import org.apache.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleManager extends Thread {
+    private static final String URL_REGEX = "(?<link>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*))";
     private Scanner scanner = new Scanner(System.in);
     private static Logger logger = Logger.getLogger(ConsoleManager.class);
 
@@ -25,11 +24,21 @@ public class ConsoleManager extends Thread {
                 printFeeds();
             } else if (command.matches("print reports")) {
                 printReports(DB.getInstance().getAllReports());
-            } else if (command.matches("add https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*) to feeds")) {
+            } else if (command.matches("add " + URL_REGEX + " to feeds")) {
                 addFeed(command);
+            } else if (command.matches("remove \\d+ from feeds")) {
+                removeFeed(command);
             } else if (command.matches("search .*")) {
                 searchHandler(command);
             }
+        }
+    }
+
+    private void removeFeed(String command) {
+        Matcher matcher = Pattern.compile("remove (?<feedId>\\d+) from feeds").matcher(command);
+        if (matcher.find()) {
+            DB.getInstance().removeFeedWithReports(
+                    Integer.valueOf(matcher.group("feedId")));
         }
     }
 
@@ -48,7 +57,6 @@ public class ConsoleManager extends Thread {
                 } else if (key.equalsIgnoreCase("feedId")) {
                     searchQuery.setFeedId(Integer.valueOf(value));
                 } else if (key.equalsIgnoreCase("pubDate")) {
-                    System.out.println(value);
                     String dateLowerBound = value.split(">")[0];
                     String dateUpperBound = value.split(">")[1];
                     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -66,7 +74,7 @@ public class ConsoleManager extends Thread {
     }
 
     private void addFeed(String command) {
-        Matcher matcher = Pattern.compile("add (?<link>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)) to feeds").matcher(command);
+        Matcher matcher = Pattern.compile("add " + URL_REGEX + " to feeds").matcher(command);
         if (matcher.find()) {
             DB.getInstance().insertFeed(
                     new Feed(matcher.group("link")));
