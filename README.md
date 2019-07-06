@@ -1,5 +1,6 @@
 [![RSS READER](http://uupload.ir/files/9fje_rss-icon.png)](https://github.com/hamidrezash2000/RSS_Reader) 
-# RSS Reader &middot;  [![Build Status](https://api.travis-ci.com/hamidrezash2000/rss_reader.svg?branch=master)](https://api.travis-ci.com/hamidrezash2000/rss_reader)
+# RSS Reader &middot;  [![Build Status](https://api.travis-ci.com/hamidrezash2000/rss_reader.svg?branch=master)](https://api.travis-ci.com/hamidrezash2000/rss_reader) [![codecov](https://codecov.io/gh/hamidrezash2000/RSS_Reader/branch/master/graph/badge.svg)](https://codecov.io/gh/hamidrezash2000/RSS_Reader)
+
 
 #### RSS Reader Features :
 
