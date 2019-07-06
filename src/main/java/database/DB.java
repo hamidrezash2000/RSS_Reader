@@ -1,9 +1,12 @@
+package database;
+
+import model.Feed;
+import model.Report;
+import util.PropertiesManager;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,9 +27,9 @@ public class DB {
     }
 
     /**
-     * Instance Of DB Class
+     * Instance Of database.database Class
      *
-     * @return Mysql DB
+     * @return Mysql database.database
      */
     public static DB getInstance() {
         if (ourInstance == null) {
@@ -94,9 +97,9 @@ public class DB {
     }
 
     /**
-     * Search in Database With Parameters :
+     * Search in database With Parameters :
      *
-     * @param searchQuery : SearchQuery Object
+     * @param searchQuery : database.SearchQuery Object
      * @return List Of Reports
      */
     public List<Report> searchReports(SearchQuery searchQuery) {

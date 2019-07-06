@@ -1,3 +1,5 @@
+import model.Feed;
+import util.PropertiesManager;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

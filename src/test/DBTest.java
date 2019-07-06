@@ -1,3 +1,7 @@
+import database.DB;
+import database.SearchQuery;
+import model.Feed;
+import model.Report;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

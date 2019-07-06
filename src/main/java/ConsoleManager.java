@@ -1,3 +1,7 @@
+import database.DB;
+import model.Feed;
+import model.Report;
+
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
