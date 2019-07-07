@@ -4,18 +4,27 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import in.nimbo.database.Column;
+import in.nimbo.database.Entity;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 
+@Entity
 public class Feed {
     private static Logger logger = Logger.getLogger(Feed.class);
+
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "url")
     private String url;
 
-    public Feed(int id,String title, String url) {
+    public Feed(int id, String title, String url) {
         this.id = id;
         this.title = title;
         this.url = url;
