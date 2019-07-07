@@ -13,19 +13,20 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
-public class RSSFetcher implements Runnable {
+public class RssFetcher implements Runnable {
 
-    private static Logger logger = Logger.getLogger(RSSUpdater.class);
+    private static Logger logger = Logger.getLogger(RssUpdater.class);
     private Feed feed;
 
-    public RSSFetcher(Feed feed) {
+    public RssFetcher(Feed feed) {
         this.feed = feed;
     }
 
     @Override
     public void run() {
-        RSSUpdater.fetcherMetric.mark();
+        RssUpdater.fetcherMetric.mark();
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(
                     new XmlReader(new URL(feed.getUrl())));
@@ -39,23 +40,23 @@ public class RSSFetcher implements Runnable {
     private void addReportToDatabase(SyndEntry report) {
         if (DB.getInstance().reportNotExists(report.getTitle(), report.getLink())) {
             Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
-            setPubDate(report, newReport);
-            extractMainContentOfReport(report, newReport);
+            setPubDate(report.getPublishedDate(), newReport);
+            extractMainContentOfReport(report.getLink(), newReport);
             DB.getInstance().insertReport(newReport);
         }
     }
 
-    private void setPubDate(SyndEntry report, Report newReport) {
+    private void setPubDate(Date pubDate, Report newReport) {
         try {
-            newReport.setPubDate(report.getPublishedDate());
+            newReport.setPubDate(pubDate);
         } catch (NullPointerException e) {
             logger.info("Couldn't find pubDate of report");
         }
     }
 
-    private void extractMainContentOfReport(SyndEntry report, Report newReport) {
+    private void extractMainContentOfReport(String url, Report newReport) {
         try {
-            String fullTextOfReport = ArticleExtractor.INSTANCE.getText(new URL(report.getLink()));
+            String fullTextOfReport = ArticleExtractor.INSTANCE.getText(new URL(url));
             newReport.setDescription(fullTextOfReport);
         } catch (NullPointerException e) {
             logger.info("Couldn't find description of report");

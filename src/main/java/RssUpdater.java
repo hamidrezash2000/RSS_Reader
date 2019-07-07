@@ -1,4 +1,3 @@
-import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
@@ -9,9 +8,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class RSSUpdater extends Thread {
+public class RssUpdater extends Thread {
     public static final MetricRegistry metricRegistry = new MetricRegistry();
-    public static final Meter fetcherMetric = metricRegistry.meter("RSSFetcher");
+    public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
 
     public static final int SECONDS_BETWEEN_UPDATE = 30;
 
@@ -24,7 +23,7 @@ public class RSSUpdater extends Thread {
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
             DB.getInstance().getAllFeeds().forEach(feed -> {
-                threadPoolExecutor.submit(new RSSFetcher(feed));
+                threadPoolExecutor.submit(new RssFetcher(feed));
             });
         }, 0, SECONDS_BETWEEN_UPDATE, TimeUnit.SECONDS);
     }

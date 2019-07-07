@@ -46,7 +46,7 @@ public class DB {
         return ourInstance;
     }
 
-    public void executeQueryOnTest(String query) {
+    public void executeQuery(String query) {
         try (Connection con = sql2o.open()) {
             con.createQuery(query).executeUpdate();
         }
