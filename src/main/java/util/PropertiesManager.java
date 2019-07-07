@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesManager {
-    public static final String DATABASSE = "database.properties";
+    public static final Properties database;
     private static Logger logger = Logger.getLogger(PropertiesManager.class);
 
+
+    static {
+        database = getProperty("database.properties");
+    }
     /**
      * this method returns Properties of given source
      *

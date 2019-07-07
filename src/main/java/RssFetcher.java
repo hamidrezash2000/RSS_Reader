@@ -1,4 +1,4 @@
-import database.DB;
+import database.Database;
 import model.Feed;
 import model.Report;
 import com.rometools.rome.feed.synd.SyndEntry;
@@ -19,8 +19,10 @@ public class RssFetcher implements Runnable {
 
     private static Logger logger = Logger.getLogger(RssUpdater.class);
     private Feed feed;
+    private Database database;
 
-    public RssFetcher(Feed feed) {
+    public RssFetcher(Database database, Feed feed) {
+        this.database = database;
         this.feed = feed;
     }
 
@@ -38,11 +40,11 @@ public class RssFetcher implements Runnable {
     }
 
     private void addReportToDatabase(SyndEntry report) {
-        if (DB.getInstance().reportNotExists(report.getTitle(), report.getLink())) {
+        if (database.reportNotExists(report.getLink())) {
             Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
             setPubDate(report.getPublishedDate(), newReport);
             extractMainContentOfReport(report.getLink(), newReport);
-            DB.getInstance().insertReport(newReport);
+            database.insertReport(newReport);
         }
     }
 

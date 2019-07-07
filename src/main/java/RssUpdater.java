@@ -1,7 +1,7 @@
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
-import database.DB;
+import database.Database;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,8 +22,8 @@ public class RssUpdater extends Thread {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            DB.getInstance().getAllFeeds().forEach(feed -> {
-                threadPoolExecutor.submit(new RssFetcher(feed));
+            Database.getInstance().getAllFeeds().forEach(feed -> {
+                threadPoolExecutor.submit(new RssFetcher(Database.getInstance(), feed));
             });
         }, 0, SECONDS_BETWEEN_UPDATE, TimeUnit.SECONDS);
     }

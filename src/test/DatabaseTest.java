@@ -1,4 +1,4 @@
-import database.DB;
+import database.Database;
 import database.SearchQuery;
 import model.Feed;
 import model.Report;
@@ -14,13 +14,13 @@ import java.util.List;
 import static junit.framework.TestCase.*;
 
 
-public class DBTest {
+public class DatabaseTest {
 
     static final String createFeedTableQuery = "CREATE TABLE feeds (id INTEGER PRIMARY KEY AUTO_INCREMENT, title TEXT, url TEXT)";
     static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL, FOREIGN KEY (feedId) REFERENCES feeds(id) ON DELETE CASCADE)";
     static final String clearReportsTableQuery = "DELETE FROM reports";
     static final String clearFeedsTableQuery = "DELETE FROM feeds";
-    static final DB database = DB.getInstance();
+    static final Database database = Database.getInstance();
 
     @BeforeClass
     public static void createTables() {
@@ -60,28 +60,26 @@ public class DBTest {
     public void reportExistsTest() {
         database.insertFeed(new Feed("تیتر تست فارسی", "http://TestURL.URL"));
         int feedId = database.getAllFeeds().get(0).getId();
-        Report report1 = new Report(feedId, "Test Similarity", "http://Test.com");
-        Report report2 = new Report(feedId, "Test Similarity", "http://Test.com");
-        Report report3 = new Report(feedId, "Test Similar", "http://Test.com");
-        database.insertReport(report1);
-        assertFalse(database.reportNotExists(report2.getTitle(), report2.getLink()));
-        assertTrue(database.reportNotExists(report3.getTitle(), report3.getLink()));
+        Report report = new Report(feedId, "Test Duplicate Report 1", "http://Test1.com");
+        Report similarReport = new Report(feedId, "Test Duplicate Report 2", "http://Test1.com");
+        Report differentReport = new Report(feedId, "Test Duplicate Report 3", "http://Test2.com");
+        database.insertReport(report);
+        assertFalse(database.reportNotExists(similarReport.getLink()));
+        assertTrue(database.reportNotExists(differentReport.getLink()));
     }
 
     @Test
     public void getSimilarReportsTest() {
         database.insertFeed(new Feed("تیتر تست فارسی", "http://TestURL.URL"));
         int feedId = database.getAllFeeds().get(0).getId();
-        Report report1 = new Report(feedId, "Test1 Similarity", "http://Test1.com");
-        Report report2 = new Report(feedId, "Test1 Similarity", "http://Test1.com");
-        Report report3 = new Report(feedId, "Test1 Similarity", "http://Test1.com");
-        Report report4 = new Report(feedId, "Test1 Similar", "http://Test1.com");
-        database.insertReport(report1);
-        database.insertReport(report2);
-        database.insertReport(report3);
-        database.insertReport(report4);
-        List<Report> similarReports = database.getSimilarReports(report1.getTitle(), report1.getLink());
-        assertEquals(similarReports, Arrays.asList(report1, report2, report3));
+        Report similarReport1 = new Report(feedId, "Test1 Similarity", "http://Test1.com");
+        Report similarReport2 = new Report(feedId, "Test2 Similarity", "http://Test1.com");
+        Report differentReport = new Report(feedId, "Test3 Similarity", "http://Test2.com");
+        database.insertReport(similarReport1);
+        database.insertReport(similarReport2);
+        database.insertReport(differentReport);
+        List<Report> similarReports = database.getSimilarReports(similarReport1.getLink());
+        assertEquals(similarReports, Arrays.asList(similarReport1, similarReport2));
     }
 
     @Test

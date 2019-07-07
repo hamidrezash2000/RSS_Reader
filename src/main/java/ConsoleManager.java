@@ -1,4 +1,4 @@
-import database.DB;
+import database.Database;
 import database.SearchQuery;
 import model.Feed;
 import model.Report;
@@ -23,7 +23,7 @@ public class ConsoleManager extends Thread {
             if (command.matches("print feeds")) {
                 printFeeds();
             } else if (command.matches("print reports")) {
-                printReports(DB.getInstance().getAllReports());
+                printReports(Database.getInstance().getAllReports());
             } else if (command.matches("add " + URL_REGEX + " to feeds")) {
                 addFeed(command);
             } else if (command.matches("remove \\d+ from feeds")) {
@@ -37,7 +37,7 @@ public class ConsoleManager extends Thread {
     private void removeFeed(String command) {
         Matcher matcher = Pattern.compile("remove (?<feedId>\\d+) from feeds").matcher(command);
         if (matcher.find()) {
-            DB.getInstance().removeFeedWithReports(
+            Database.getInstance().removeFeedWithReports(
                     Integer.valueOf(matcher.group("feedId")));
         }
     }
@@ -70,19 +70,19 @@ public class ConsoleManager extends Thread {
                 }
             }
         }
-        printReports(DB.getInstance().searchReports(searchQuery));
+        printReports(Database.getInstance().searchReports(searchQuery));
     }
 
     private void addFeed(String command) {
         Matcher matcher = Pattern.compile("add " + URL_REGEX + " to feeds").matcher(command);
         if (matcher.find()) {
-            DB.getInstance().insertFeed(
+            Database.getInstance().insertFeed(
                     new Feed(matcher.group("link")));
         }
     }
 
     public void printFeeds() {
-        List<Feed> feeds = DB.getInstance().getAllFeeds();
+        List<Feed> feeds = Database.getInstance().getAllFeeds();
         System.out.println(":: All Feeds ::");
         feeds.forEach(feed -> {
             System.out.println(String.format("%d :: %s", feed.getId(), feed.getTitle()));
