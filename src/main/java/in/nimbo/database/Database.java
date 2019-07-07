@@ -8,11 +8,15 @@ import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 import in.nimbo.util.PropertiesManager;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class Database {
+public class Database  {
     private static Database ourInstance;
     private static Logger logger = Logger.getLogger(Database.class);
     private Sql2o sql2o;
@@ -39,7 +43,7 @@ public class Database {
             ourInstance = new Database(
                     String.format("jdbc:%s/%s?useUnicode=true&characterEncoding=UTF-8",
                             properties.getProperty("address"),
-                            properties.getProperty("in/nimbo/database")
+                            properties.getProperty("database")
                     ),
                     properties.getProperty("username"),
                     properties.getProperty("password")
@@ -59,13 +63,12 @@ public class Database {
     }
 
     public void insertFeed(Feed feed) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.INSERT_FEED)) {
-                query.addParameter("title", feed.getTitle())
-                        .addParameter("url", feed.getUrl())
-                        .executeUpdate();
-            }
-        } catch (Sql2oException e) {
+        try (java.sql.Connection con = HikariCPDataSource.getConnection();
+            PreparedStatement statement = con.prepareStatement(Query.INSERT_FEED)) {
+            statement.setString(1,feed.getTitle());
+            statement.setString(2,feed.getUrl());
+            statement.execute();
+        } catch (SQLException e) {
             logger.error(e.getMessage());
         }
     }
@@ -86,11 +89,18 @@ public class Database {
     }
 
     public List<Feed> getAllFeeds() {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.GET_ALL_FEEDS)) {
-                return query.executeAndFetch(Feed.class);
+        try (java.sql.Connection con = HikariCPDataSource.getConnection();
+             ResultSet feedSet = con.prepareStatement(Query.GET_ALL_FEEDS_JDBC).executeQuery()) {
+            List<Feed> feedList = new ArrayList<>();
+            while(feedSet.next()) {
+                Feed feed = new Feed(
+                        feedSet.getInt("id"),
+                        feedSet.getString("title"),
+                        feedSet.getString("url"));
+                feedList.add(feed);
             }
-        } catch (Sql2oException e) {
+            return feedList;
+        } catch (SQLException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
         }
@@ -109,23 +119,21 @@ public class Database {
     }
 
     public void insertReport(Report report) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.INSERT_REPORT)) {
-                query.addParameter("title", report.getTitle())
-                        .addParameter("link", report.getLink())
-                        .addParameter("pubDate", report.getPubDate())
-                        .addParameter("description", report.getDescription())
-                        .addParameter("feedId", report.getFeedId())
-                        .executeUpdate();
-            }
-        } catch (Sql2oException e) {
+        try (java.sql.Connection con = HikariCPDataSource.getConnection();
+             PreparedStatement statement = con.prepareStatement(Query.INSERT_REPORT)) {
+            statement.setInt(1, report.getFeedId());
+            statement.setString(2, report.getTitle());
+            statement.setString(3, report.getLink());
+            statement.setDate(4, (Date)report.getPubDate());
+            statement.setString(5, report.getDescription());
+            statement.execute();
+        } catch (SQLException e) {
             logger.error(e.getMessage());
         }
     }
 
     public List<Report> getAllReports() {
         try (Connection con = sql2o.open()) {
-
             return con.createQuery(Query.GET_ALL_REPORTS)
                     .executeAndFetch(Report.class);
         } catch (Sql2oException e) {
@@ -154,5 +162,4 @@ public class Database {
     public boolean reportNotExists(String link) {
         return getSimilarReports(link).size() == 0;
     }
-
 }

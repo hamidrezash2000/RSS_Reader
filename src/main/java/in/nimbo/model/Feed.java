@@ -15,6 +15,11 @@ public class Feed {
     private String title;
     private String url;
 
+    public Feed(int id,String title, String url) {
+        this.id = id;
+        this.title = title;
+        this.url = url;
+    }
 
     public Feed(String title, String url) {
         this.title = title;
