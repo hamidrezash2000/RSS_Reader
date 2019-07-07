@@ -32,7 +32,7 @@ public class Feed {
      * @return title in String
      */
     public static String getTitleOfRSSFeed(String url) {
-        String title = "RSS in.nimbo.model.Feed Title";
+        String title = "RSS Feed Title";
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
             title = rssFeed.getTitle();

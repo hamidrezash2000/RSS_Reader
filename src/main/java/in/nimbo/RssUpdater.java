@@ -12,9 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class RssUpdater extends Thread {
     public static final MetricRegistry metricRegistry = new MetricRegistry();
-    public static final Meter fetcherMetric = metricRegistry.meter("in.nimbo.RssFetcher");
-
+    public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
     public static final int SECONDS_BETWEEN_UPDATE = 30;
+    private Database database;
+
+    public RssUpdater(Database database){
+        this.database = database;
+    }
 
     @Override
     public void run() {
@@ -25,7 +29,7 @@ public class RssUpdater extends Thread {
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
             Database.getInstance().getAllFeeds().forEach(feed -> {
-                threadPoolExecutor.submit(new RssFetcher(Database.getInstance(), feed));
+                threadPoolExecutor.submit(new RssFetcher(database, feed));
             });
         }, 0, SECONDS_BETWEEN_UPDATE, TimeUnit.SECONDS);
     }

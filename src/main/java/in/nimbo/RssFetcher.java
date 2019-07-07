@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class RssFetcher implements Runnable {
 
@@ -35,19 +38,20 @@ public class RssFetcher implements Runnable {
             SyndFeed rssFeed = new SyndFeedInput().build(
                     new XmlReader(new URL(feed.getUrl())));
 
-            rssFeed.getEntries().forEach(this::addReportToDatabase);
+            rssFeed.getEntries().stream()
+                    .map(this::mapToReport).filter(Objects::nonNull)
+                    .filter(report -> database.reportNotExists(report.getLink()))
+                    .forEach(report ->  database.insertReport(report));
         } catch (FeedException | IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void addReportToDatabase(SyndEntry report) {
-        if (database.reportNotExists(report.getLink())) {
-            Report newReport = new Report(feed.getId(), report.getTitle(), report.getLink());
-            setPubDate(report.getPublishedDate(), newReport);
-            extractMainContentOfReport(report.getLink(), newReport);
-            database.insertReport(newReport);
-        }
+    private Report mapToReport(SyndEntry entry) {
+        Report newReport = new Report(feed.getId(), entry.getTitle(), entry.getLink());
+        setPubDate(entry.getPublishedDate(), newReport);
+        extractMainContentOfReport(entry.getLink(), newReport);
+        return newReport;
     }
 
     private void setPubDate(Date pubDate, Report newReport) {

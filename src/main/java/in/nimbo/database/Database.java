@@ -2,11 +2,11 @@ package in.nimbo.database;
 
 import in.nimbo.model.Feed;
 import in.nimbo.model.Report;
+import in.nimbo.util.PropertiesManager;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
-import in.nimbo.util.PropertiesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Database {
             ourInstance = new Database(
                     String.format("jdbc:%s/%s?useUnicode=true&characterEncoding=UTF-8",
                             properties.getProperty("address"),
-                            properties.getProperty("in/nimbo/database")
+                            properties.getProperty("database")
                     ),
                     properties.getProperty("username"),
                     properties.getProperty("password")
@@ -49,22 +49,20 @@ public class Database {
     }
 
     public void executeQuery(String queryString) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(queryString)) {
-                query.executeUpdate();
-            }
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(queryString)) {
+            query.executeUpdate();
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
         }
     }
 
     public void insertFeed(Feed feed) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.INSERT_FEED)) {
-                query.addParameter("title", feed.getTitle())
-                        .addParameter("url", feed.getUrl())
-                        .executeUpdate();
-            }
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(Query.INSERT_FEED)) {
+            query.addParameter("title", feed.getTitle())
+                    .addParameter("url", feed.getUrl())
+                    .executeUpdate();
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
         }
@@ -86,10 +84,9 @@ public class Database {
     }
 
     public List<Feed> getAllFeeds() {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.GET_ALL_FEEDS)) {
-                return query.executeAndFetch(Feed.class);
-            }
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(Query.GET_ALL_FEEDS)) {
+            return query.executeAndFetch(Feed.class);
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
@@ -97,11 +94,10 @@ public class Database {
     }
 
     public List<Report> getSimilarReports(String link) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.GET_SIMILAR_REPORTS)) {
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(Query.GET_SIMILAR_REPORTS)) {
                 return query.addParameter("link", link)
                         .executeAndFetch(Report.class);
-            }
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
@@ -109,25 +105,23 @@ public class Database {
     }
 
     public void insertReport(Report report) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(Query.INSERT_REPORT)) {
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(Query.INSERT_REPORT)) {
                 query.addParameter("title", report.getTitle())
                         .addParameter("link", report.getLink())
                         .addParameter("pubDate", report.getPubDate())
                         .addParameter("description", report.getDescription())
                         .addParameter("feedId", report.getFeedId())
                         .executeUpdate();
-            }
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
         }
     }
 
     public List<Report> getAllReports() {
-        try (Connection con = sql2o.open()) {
-
-            return con.createQuery(Query.GET_ALL_REPORTS)
-                    .executeAndFetch(Report.class);
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(Query.GET_ALL_REPORTS)) {
+            return query.executeAndFetch(Report.class);
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
@@ -141,10 +135,9 @@ public class Database {
      * @return List Of Reports
      */
     public List<Report> searchReports(SearchQuery searchQuery) {
-        try (Connection con = sql2o.open()) {
-            try (org.sql2o.Query query = con.createQuery(searchQuery.generateQuery())) {
-                return query.executeAndFetch(Report.class);
-            }
+        try (Connection con = sql2o.open();
+             org.sql2o.Query query = con.createQuery(searchQuery.generateQuery())) {
+            return query.executeAndFetch(Report.class);
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
