@@ -1,5 +1,5 @@
-import model.Feed;
-import util.PropertiesManager;
+import in.nimbo.model.Feed;
+import in.nimbo.util.PropertiesManager;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

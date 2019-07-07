@@ -1,13 +1,7 @@
-import java.net.MalformedURLException;
-import java.net.URL;
+package in.nimbo;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import de.l3s.boilerpipe.BoilerpipeProcessingException;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
-import de.l3s.boilerpipe.extractors.DefaultExtractor;
-
-
 
 
 public class Main {

@@ -1,12 +1,12 @@
-package database;
+package in.nimbo.database;
 
-import model.Feed;
-import model.Report;
+import in.nimbo.model.Feed;
+import in.nimbo.model.Report;
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
-import util.PropertiesManager;
+import in.nimbo.util.PropertiesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +29,9 @@ public class Database {
     }
 
     /**
-     * Instance Of database.database Class
+     * Instance Of in.nimbo.database.in.nimbo.database Class
      *
-     * @return Mysql database.database
+     * @return Mysql in.nimbo.database.in.nimbo.database
      */
     public static Database getInstance() {
         if (ourInstance == null) {
@@ -39,7 +39,7 @@ public class Database {
             ourInstance = new Database(
                     String.format("jdbc:%s/%s?useUnicode=true&characterEncoding=UTF-8",
                             properties.getProperty("address"),
-                            properties.getProperty("database")
+                            properties.getProperty("in/nimbo/database")
                     ),
                     properties.getProperty("username"),
                     properties.getProperty("password")
@@ -135,9 +135,9 @@ public class Database {
     }
 
     /**
-     * Search in database With Parameters :
+     * Search in in.nimbo.database With Parameters :
      *
-     * @param searchQuery : database.SearchQuery Object
+     * @param searchQuery : in.nimbo.database.SearchQuery Object
      * @return List Of Reports
      */
     public List<Report> searchReports(SearchQuery searchQuery) {

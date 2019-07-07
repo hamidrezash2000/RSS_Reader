@@ -1,6 +1,8 @@
-import database.Database;
-import model.Feed;
-import model.Report;
+package in.nimbo;
+
+import in.nimbo.database.Database;
+import in.nimbo.model.Feed;
+import in.nimbo.model.Report;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -61,7 +63,7 @@ public class RssFetcher implements Runnable {
             String fullTextOfReport = ArticleExtractor.INSTANCE.getText(new URL(url));
             newReport.setDescription(fullTextOfReport);
         } catch (NullPointerException e) {
-            logger.info("Couldn't find description of report");
+            logger.info("Couldn't find full text of report");
         } catch (MalformedURLException | BoilerpipeProcessingException e) {
             logger.error(e.getMessage());
         }

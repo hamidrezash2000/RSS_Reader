@@ -1,4 +1,4 @@
-package database;
+package in.nimbo.database;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

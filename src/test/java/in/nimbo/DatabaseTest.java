@@ -1,7 +1,7 @@
-import database.Database;
-import database.SearchQuery;
-import model.Feed;
-import model.Report;
+import in.nimbo.database.Database;
+import in.nimbo.database.SearchQuery;
+import in.nimbo.model.Feed;
+import in.nimbo.model.Report;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

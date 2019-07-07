@@ -1,4 +1,4 @@
-package util;
+package in.nimbo.util;
 
 import org.apache.log4j.Logger;
 

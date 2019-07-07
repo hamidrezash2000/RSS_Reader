@@ -1,7 +1,9 @@
-import database.Database;
-import database.SearchQuery;
-import model.Feed;
-import model.Report;
+package in.nimbo;
+
+import in.nimbo.database.Database;
+import in.nimbo.database.SearchQuery;
+import in.nimbo.model.Feed;
+import in.nimbo.model.Report;
 import org.apache.log4j.Logger;
 
 import java.text.ParseException;

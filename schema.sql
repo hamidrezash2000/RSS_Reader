@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
--- Host: localhost    database: rss
+-- Host: localhost    in.nimbo.database: rss
 -- ------------------------------------------------------
 -- Server version	5.7.26-0ubuntu0.18.04.1
 

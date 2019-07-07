@@ -11,8 +11,8 @@
 #### Installation :
 
 - Use maven to install the dependencies.
-- Install database using schema.sql
-- Config database.properties
+- Install in.nimbo.database using schema.sql
+- Config in.nimbo.database.properties
 - Start using it :)
 
 #### How To Search :
