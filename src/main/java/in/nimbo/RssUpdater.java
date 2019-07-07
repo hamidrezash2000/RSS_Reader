@@ -16,7 +16,7 @@ public class RssUpdater extends Thread {
     public static final int SECONDS_BETWEEN_UPDATE = 30;
     private Database database;
 
-    public RssUpdater(Database database){
+    public RssUpdater(Database database) {
         this.database = database;
     }
 

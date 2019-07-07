@@ -1,8 +1,5 @@
 package in.nimbo;
 
-import in.nimbo.database.Database;
-import in.nimbo.model.Feed;
-import in.nimbo.model.Report;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -10,6 +7,9 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import in.nimbo.database.Database;
+import in.nimbo.model.Feed;
+import in.nimbo.model.Report;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -17,8 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class RssFetcher implements Runnable {
 
@@ -38,10 +36,10 @@ public class RssFetcher implements Runnable {
             SyndFeed rssFeed = new SyndFeedInput().build(
                     new XmlReader(new URL(feed.getUrl())));
 
-            rssFeed.getEntries().stream()
+            rssFeed.getEntries().parallelStream()
                     .map(this::mapToReport).filter(Objects::nonNull)
                     .filter(report -> database.reportNotExists(report.getLink()))
-                    .forEach(report ->  database.insertReport(report));
+                    .forEach(report -> database.insertReport(report));
         } catch (FeedException | IOException e) {
             logger.error(e.getMessage());
         }
