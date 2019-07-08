@@ -1,7 +1,11 @@
-import database.DB;
+package in.nimbo;
+
+import in.nimbo.database.Database;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 public class Main {
 
@@ -11,7 +15,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new RSSUpdater().start();
+        new RssUpdater(Database.getInstance()).start();
         new ConsoleManager().start();
     }
 }

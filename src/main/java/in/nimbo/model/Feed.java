@@ -1,4 +1,4 @@
-package model;
+package in.nimbo.model;
 
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -32,7 +32,7 @@ public class Feed {
      * @return title in String
      */
     public static String getTitleOfRSSFeed(String url) {
-        String title = "RSS model.Feed Title";
+        String title = "RSS Feed Title";
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
             title = rssFeed.getTitle();
