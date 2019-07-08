@@ -18,11 +18,11 @@ import static junit.framework.TestCase.*;
 
 public class DatabaseTest {
 
-    static final String createFeedTableQuery = "CREATE TABLE feeds (id INTEGER PRIMARY KEY AUTO_INCREMENT, title TEXT, url TEXT)";
-    static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL, FOREIGN KEY (feedId) REFERENCES feeds(id) ON DELETE CASCADE)";
-    static final String clearReportsTableQuery = "DELETE FROM reports";
-    static final String clearFeedsTableQuery = "DELETE FROM feeds";
-    static final Database database = Database.getInstance();
+    private static final String createFeedTableQuery = "CREATE TABLE feeds (id INTEGER PRIMARY KEY AUTO_INCREMENT, title TEXT, url TEXT)";
+    private static final String createReportTableQuery = "CREATE TABLE reports (id INTEGER PRIMARY KEY AUTO_INCREMENT, link TEXT , title TEXT , pubDate DATETIME, description TEXT , feedId INTEGER NOT NULL, FOREIGN KEY (feedId) REFERENCES feeds(id) ON DELETE CASCADE)";
+    private static final String clearReportsTableQuery = "DELETE FROM reports";
+    private static final String clearFeedsTableQuery = "DELETE FROM feeds";
+    private static final Database database = Database.getInstance();
 
     @BeforeClass
     public static void createTables() {

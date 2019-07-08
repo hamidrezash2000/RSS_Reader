@@ -28,7 +28,7 @@ class HikariCPDataSource {
     private HikariCPDataSource() {
     }
 
-    static HikariDataSource getDataSource() {
+    public static HikariDataSource getDataSource() {
         return dataSource;
     }
 }
