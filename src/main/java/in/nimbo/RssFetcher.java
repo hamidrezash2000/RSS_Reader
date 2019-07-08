@@ -44,7 +44,7 @@ public class RssFetcher implements Runnable {
                     .filter(report -> database.reportNotExists(report.getLink()))
                     .forEach(report -> database.insertReport(report));
         } catch (FeedException | IOException e) {
-            rssUpdater.cacheInvalidLink(feed);
+            rssUpdater.cacheInvalidLink(feed.getId());
             logger.error(e.getMessage());
         }
     }

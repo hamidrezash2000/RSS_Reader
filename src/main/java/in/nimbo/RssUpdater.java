@@ -4,7 +4,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import in.nimbo.database.Database;
-import in.nimbo.model.Feed;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -17,7 +16,7 @@ public class RssUpdater extends Thread {
     public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
     public static final int SECONDS_BETWEEN_UPDATE = 30;
     public static final int SECONDS_BETWEEN_FEED_CLEANING = 120;
-    private HashMap<Feed, Integer> invalidLinksCache;
+    private HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 
     public RssUpdater(Database database) {
@@ -30,6 +29,7 @@ public class RssUpdater extends Thread {
         Slf4jReporter reporter = Slf4jReporter.forRegistry(metricRegistry).build();
         reporter.start(5, TimeUnit.SECONDS);
         reporter.report();
+        
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "Scheduled Rss Updater"));
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(10);
@@ -45,18 +45,18 @@ public class RssUpdater extends Thread {
         feedCleaner.scheduleWithFixedDelay(this::handleInvalidLinks,0, SECONDS_BETWEEN_FEED_CLEANING, TimeUnit.SECONDS);
     }
 
-    public void cacheInvalidLink(Feed invalidFeed) {
-        if (invalidLinksCache.containsKey(invalidFeed)) {
-            invalidLinksCache.put(invalidFeed, 1);
+    public void cacheInvalidLink(int invalidFeedId) {
+        if (!invalidLinksCache.containsKey(invalidFeedId)) {
+            invalidLinksCache.put(invalidFeedId, 1);
         } else {
-            invalidLinksCache.put(invalidFeed, invalidLinksCache.get(invalidFeed) + 1);
+            invalidLinksCache.put(invalidFeedId, invalidLinksCache.get(invalidFeedId) + 1);
         }
     }
 
     public void handleInvalidLinks() {
-        for (Map.Entry<Feed, Integer> entry : invalidLinksCache.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : invalidLinksCache.entrySet()) {
             if (2 * entry.getValue() >= SECONDS_BETWEEN_FEED_CLEANING / SECONDS_BETWEEN_UPDATE) {
-                database.removeFeedWithReports(entry.getKey().getId());
+                database.removeFeedWithReports(entry.getKey());
                 invalidLinksCache.remove(entry.getKey());
             }
         }
