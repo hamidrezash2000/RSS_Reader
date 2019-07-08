@@ -6,7 +6,7 @@ import in.nimbo.util.PropertiesManager;
 
 import java.util.Properties;
 
-public class HikariCPDataSource {
+class HikariCPDataSource {
 
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource dataSource;

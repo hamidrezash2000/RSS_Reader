@@ -1,3 +1,5 @@
+package in.nimbo;
+
 import in.nimbo.database.Database;
 import in.nimbo.database.SearchQuery;
 import in.nimbo.model.Feed;

@@ -1,3 +1,5 @@
+package in.nimbo;
+
 import in.nimbo.model.Feed;
 import in.nimbo.util.PropertiesManager;
 import org.junit.Test;
