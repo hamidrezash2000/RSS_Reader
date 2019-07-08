@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/530875ffec504340afc4c281ddbbaaf3)](https://app.codacy.com/app/hamidrezash2000/RSS_Reader?utm_source=github.com&utm_medium=referral&utm_content=hamidrezash2000/RSS_Reader&utm_campaign=Badge_Grade_Dashboard)
 [![RSS READER](http://uupload.ir/files/9fje_rss-icon.png)](https://github.com/hamidrezash2000/RSS_Reader) 
 # RSS Reader &middot;  [![Build Status](https://api.travis-ci.com/hamidrezash2000/rss_reader.svg?branch=master)](https://api.travis-ci.com/hamidrezash2000/rss_reader) [![codecov](https://codecov.io/gh/hamidrezash2000/RSS_Reader/branch/master/graph/badge.svg)](https://codecov.io/gh/hamidrezash2000/RSS_Reader)
 
