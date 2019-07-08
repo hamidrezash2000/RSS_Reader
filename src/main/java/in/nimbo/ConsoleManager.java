@@ -70,7 +70,7 @@ public class ConsoleManager extends Thread {
                     System.out.println(dateUpperBoundString);
                     Matcher dateLowerBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateLowerBoundString);
                     Matcher dateUpperBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateUpperBoundString);
-                    if (dateLowerBoundMatcher.find(), dateUpperBoundMatcher.find()){
+                    if (dateLowerBoundMatcher.find() && dateUpperBoundMatcher.find()){
                         Date dateLowerBound = Date.from(Instant.from(PersianDate.of(
                                 Integer.valueOf(dateLowerBoundMatcher.group("year")),
                                 Integer.valueOf(dateLowerBoundMatcher.group("month")),
