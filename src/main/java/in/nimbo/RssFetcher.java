@@ -33,6 +33,7 @@ public class RssFetcher implements Runnable {
 
     @Override
     public void run() {
+        Thread.currentThread().setName(getThreadName());
         RssUpdater.fetcherMetric.mark();
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(
@@ -72,5 +73,9 @@ public class RssFetcher implements Runnable {
         } catch (MalformedURLException | BoilerpipeProcessingException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public String getThreadName() {
+        return feed.getTitle() + "Fetcher";
     }
 }
