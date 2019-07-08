@@ -8,8 +8,8 @@ import in.nimbo.model.Report;
 import org.apache.log4j.Logger;
 
 import java.text.FieldPosition;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class ConsoleManager extends Thread {
     private static final String URL_REGEX = "(?<link>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*))";
+    private static final String DATE_REGEX = "(?<year>\\d{2,4})/(?<month>\\d{1,2})/(?<day>\\d{1,2})";
     private static Logger logger = Logger.getLogger(ConsoleManager.class);
     private Scanner scanner = new Scanner(System.in);
 
@@ -63,15 +64,26 @@ public class ConsoleManager extends Thread {
                 } else if (key.equalsIgnoreCase("feedId")) {
                     searchQuery.setFeedId(Integer.valueOf(value));
                 } else if (key.equalsIgnoreCase("pubDate")) {
-                    String dateLowerBound = value.split(">")[0];
-                    String dateUpperBound = value.split(">")[1];
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-                    try {
-                        searchQuery.setLowerAndUpperBound(
-                                format.parse(dateLowerBound),
-                                format.parse(dateUpperBound));
-                    } catch (ParseException e) {
-                        logger.error(e.getMessage());
+                    String dateLowerBoundString = value.split(">")[0];
+                    String dateUpperBoundString = value.split(">")[1];
+                    System.out.println(dateLowerBoundString);
+                    System.out.println(dateUpperBoundString);
+                    Matcher dateLowerBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateLowerBoundString);
+                    Matcher dateUpperBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateUpperBoundString);
+                    if (dateLowerBoundMatcher.find(), dateUpperBoundMatcher.find()){
+                        Date dateLowerBound = Date.from(Instant.from(PersianDate.of(
+                                Integer.valueOf(dateLowerBoundMatcher.group("year")),
+                                Integer.valueOf(dateLowerBoundMatcher.group("month")),
+                                Integer.valueOf(dateLowerBoundMatcher.group("day"))).toGregorian()
+                                .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+                        Date dateUpperBound = Date.from(Instant.from(PersianDate.of(
+                                Integer.valueOf(dateUpperBoundMatcher.group("year")),
+                                Integer.valueOf(dateUpperBoundMatcher.group("month")),
+                                Integer.valueOf(dateUpperBoundMatcher.group("day"))).toGregorian()
+                                .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+                        searchQuery.setLowerAndUpperBound(dateLowerBound, dateUpperBound);
                     }
                 }
             }

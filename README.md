@@ -6,6 +6,7 @@
 
   - Fetch and update RSS feed reports in parallel every 60 seconds. 
   - Extract main content of report from report link
+  - ShamsiDate for reports
   - Search in reports by feed, title, description, publishedDate
 
 #### Installation :
@@ -24,5 +25,5 @@ Use search in commandline with these attributes and format :
 
 example : 
 ```
-search -title:خبر -feedId:2 -pubDate:2000/02/23>2002/05/03
+search -title:خبر -feedId:2 -pubdate:1398/04/15>1398/04/18
 ```
