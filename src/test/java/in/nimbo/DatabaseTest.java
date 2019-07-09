@@ -43,6 +43,19 @@ public class DatabaseTest {
     }
 
     @Test
+    public void removeFeedWithReportsTest () {
+        Feed feed = new Feed("تیتر تست فارسی", "http://TestURL.URL");
+        database.insertFeed(feed);
+        int feedId = database.getAllFeeds().get(0).getId();
+        Report report1 = new Report(feedId, "Test Duplicate Report 1", "http://Test1.com");
+        Report report2 = new Report(feedId, "Test Duplicate Report 2", "http://Test2.com");
+        database.removeFeedWithReports(feedId);
+        assertTrue(!database.getAllReports().contains(report1) &&
+                !database.getAllReports().contains(report2) &&
+                !database.getAllFeeds().contains(feed));
+    }
+
+    @Test
     public void insertFeedTest() {
         Feed feed = new Feed("تیتر تست تیتر تست فارسی", "http://TestURL.URL");
         database.insertFeed(feed);
@@ -131,4 +144,6 @@ public class DatabaseTest {
         assertTrue(searchedReports.containsAll(Arrays.asList(reportToSearch1, reportToSearch3))
                 && !searchedReports.contains(reportToSearch2));
     }
+
+
 }
