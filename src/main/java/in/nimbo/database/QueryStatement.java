@@ -1,6 +1,6 @@
 package in.nimbo.database;
 
-public class Query {
+public class QueryStatement {
     public static final String INSERT_FEED = "insert into feeds(title, url) values (:title, :url)";
     public static final String REMOVE_FEED = "DELETE FROM feeds WHERE id=:id";
     public static final String REMOVE_FEEDS_REPORTS = "DELETE FROM reports WHERE feedId=:feedId";

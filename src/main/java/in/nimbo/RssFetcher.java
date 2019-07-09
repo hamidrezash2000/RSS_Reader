@@ -22,11 +22,13 @@ public class RssFetcher implements Runnable {
 
     private static Logger logger = Logger.getLogger(RssUpdater.class);
     private Feed feed;
+    private RssUpdater rssUpdater;
     private Database database;
 
-    public RssFetcher(Database database, Feed feed) {
+    public RssFetcher(Database database, Feed feed, RssUpdater rssUpdater) {
         this.database = database;
         this.feed = feed;
+        this.rssUpdater = rssUpdater;
     }
 
     @Override
@@ -42,6 +44,7 @@ public class RssFetcher implements Runnable {
                     .filter(report -> database.reportNotExists(report.getLink()))
                     .forEach(report -> database.insertReport(report));
         } catch (FeedException | IOException e) {
+            rssUpdater.cacheInvalidLink(feed.getId());
             logger.error(e.getMessage());
         }
     }
