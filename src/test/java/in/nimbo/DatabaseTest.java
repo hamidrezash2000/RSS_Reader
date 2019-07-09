@@ -124,7 +124,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void searchReportsPubDateTest() {
+    public void searchReportsByPubDateTest() {
         database.insertFeed(new Feed("تیتر تست فارسی", "http://TestURL.URL"));
         int feedId = database.getAllFeeds().get(0).getId();
         Report reportToSearch1 = new Report(feedId, "Test Duplicate Report Title 1", "http://TestURL1.URL",
@@ -145,5 +145,23 @@ public class DatabaseTest {
                 && !searchedReports.contains(reportToSearch2));
     }
 
-
+    @Test
+    public void searchReportsByFeedIdTest() {
+        database.insertFeed(new Feed("تیتر تست فارسی 1", "http://TestURL1.URL"));
+        database.insertFeed(new Feed("تیتر تست فارسی 2", "http://TestURL2.URL"));
+        List<Feed> allFeeds = database.getAllFeeds();
+        int feedId1 = allFeeds.get(0).getId();
+        int feedId2 = allFeeds.get(1).getId();
+        Report sameReport1 = new Report(feedId1, "Test Duplicate Report Title 1", "http://TestURL1.URL");
+        Report sameReport2 = new Report(feedId1, "Test Duplicate Report Title 2", "http://TestURL2.URL");
+        Report differentReport = new Report(feedId2, "Test Duplicate Report Title 3", "http://TestURL3.URL");
+        database.insertReport(sameReport1);
+        database.insertReport(sameReport2);
+        database.insertReport(differentReport);
+        SearchQuery searchQuery = new SearchQuery();
+        searchQuery.setFeedId(feedId1);
+        final List<Report> searchedReports = database.searchReports(searchQuery);
+        assertTrue(searchedReports.containsAll(Arrays.asList(sameReport1, sameReport2))
+                && !searchedReports.contains(differentReport));
+    }
 }
