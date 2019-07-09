@@ -14,8 +14,8 @@ import java.util.concurrent.*;
 public class RssUpdater extends Thread {
     public static final MetricRegistry metricRegistry = new MetricRegistry();
     public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
-    public static final int SECONDS_BETWEEN_UPDATE = 30;
-    public static final int SECONDS_BETWEEN_FEED_CLEANING = 120;
+    public static final int SECONDS_BETWEEN_UPDATE = 3;
+    public static final int SECONDS_BETWEEN_FEED_CLEANING = 6;
     private HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 

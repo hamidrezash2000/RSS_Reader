@@ -22,15 +22,21 @@ public class ConsoleManager extends Thread {
     private static final String DATE_REGEX = "(?<year>\\d{2,4})/(?<month>\\d{1,2})/(?<day>\\d{1,2})";
     private static Logger logger = Logger.getLogger(ConsoleManager.class);
     private Scanner scanner = new Scanner(System.in);
+    private Database database;
+
+    public ConsoleManager(Database database) {
+        this.database = database;
+    }
 
     @Override
     public void run() {
+        // TODO: 7/10/19 handle active and not active feeds
         while (true) {
             String command = scanner.nextLine();
             if (command.matches("print feeds")) {
                 printFeeds();
             } else if (command.matches("print reports")) {
-                printReports(Database.getInstance().getAllReports());
+                printReports(database.getAllReports());
             } else if (command.matches("add " + URL_REGEX + " to feeds")) {
                 addFeed(command);
             } else if (command.matches("remove \\d+ from feeds")) {
@@ -44,7 +50,7 @@ public class ConsoleManager extends Thread {
     private void removeFeed(String command) {
         Matcher matcher = Pattern.compile("remove (?<feedId>\\d+) from feeds").matcher(command);
         if (matcher.find()) {
-            Database.getInstance().removeFeedWithReports(
+            database.removeFeedWithReports(
                     Integer.valueOf(matcher.group("feedId")));
         }
     }
@@ -66,8 +72,6 @@ public class ConsoleManager extends Thread {
                 } else if (key.equalsIgnoreCase("pubDate")) {
                     String dateLowerBoundString = value.split(">")[0];
                     String dateUpperBoundString = value.split(">")[1];
-                    System.out.println(dateLowerBoundString);
-                    System.out.println(dateUpperBoundString);
                     Matcher dateLowerBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateLowerBoundString);
                     Matcher dateUpperBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateUpperBoundString);
                     if (dateLowerBoundMatcher.find() && dateUpperBoundMatcher.find()){
@@ -88,19 +92,19 @@ public class ConsoleManager extends Thread {
                 }
             }
         }
-        printReports(Database.getInstance().searchReports(searchQuery));
+        printReports(database.searchReports(searchQuery));
     }
 
     private void addFeed(String command) {
         Matcher matcher = Pattern.compile("add " + URL_REGEX + " to feeds").matcher(command);
         if (matcher.find()) {
-            Database.getInstance().insertFeed(
+            database.insertFeed(
                     new Feed(matcher.group("link")));
         }
     }
 
     public void printFeeds() {
-        List<Feed> feeds = Database.getInstance().getAllFeeds();
+        List<Feed> feeds = database.getAllFeeds();
         System.out.println(":: All Feeds ::");
         feeds.forEach(feed -> {
             System.out.println(String.format("%d :: %s", feed.getId(), feed.getTitle()));
