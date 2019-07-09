@@ -16,7 +16,8 @@ public class RssUpdater extends Thread {
     public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
     public static final int SECONDS_BETWEEN_UPDATE = 3;
     public static final int SECONDS_BETWEEN_FEED_CLEANING = 6;
-    private HashMap<Integer, Integer> invalidLinksCache;
+    // TODO: 7/9/19 this field should be private
+    public HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 
     public RssUpdater(Database database) {
