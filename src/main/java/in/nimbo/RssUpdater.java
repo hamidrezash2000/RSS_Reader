@@ -4,19 +4,20 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import in.nimbo.database.Database;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class RssUpdater extends Thread {
-    public static final MetricRegistry metricRegistry = new MetricRegistry();
+    private static final MetricRegistry metricRegistry = new MetricRegistry();
     public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
-    public static final int SECONDS_BETWEEN_UPDATE = 3;
-    public static final int SECONDS_BETWEEN_FEED_CLEANING = 6;
-    // TODO: 7/9/19 this field should be private
+    private static final int SECONDS_BETWEEN_UPDATE = 3;
+    private static final int SECONDS_BETWEEN_FEED_CLEANING = 6;
     public HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 
@@ -30,7 +31,7 @@ public class RssUpdater extends Thread {
         Slf4jReporter reporter = Slf4jReporter.forRegistry(metricRegistry).build();
         reporter.start(5, TimeUnit.SECONDS);
         reporter.report();
-        
+
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "Scheduled Rss Updater"));
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(10);
@@ -43,7 +44,7 @@ public class RssUpdater extends Thread {
 
 
         ScheduledExecutorService feedCleaner = Executors.newSingleThreadScheduledExecutor();
-        feedCleaner.scheduleWithFixedDelay(this::handleInvalidLinks,0, SECONDS_BETWEEN_FEED_CLEANING, TimeUnit.SECONDS);
+        feedCleaner.scheduleWithFixedDelay(this::handleInvalidLinks, 0, SECONDS_BETWEEN_FEED_CLEANING, TimeUnit.SECONDS);
     }
 
     public void cacheInvalidLink(int invalidFeedId) {

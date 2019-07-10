@@ -51,8 +51,7 @@ public class Database {
                     .addParameter("url", feed.getUrl())
                     .executeUpdate();
         } catch (Sql2oException e) {
-            // TODO: 7/10/19  
-            logger.error("",e);
+            logger.error(e.getMessage());
         }
     }
 
