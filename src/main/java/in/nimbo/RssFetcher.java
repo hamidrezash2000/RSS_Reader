@@ -1,5 +1,6 @@
 package in.nimbo;
 
+import com.codahale.metrics.Meter;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -33,8 +34,8 @@ public class RssFetcher implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setName(getThreadName());
-        RssUpdater.fetcherMetric.mark();
+        Thread.currentThread().setName(feed.getTitle());
+        Meter newReportsMeter = RssUpdater.rssUpdateMetricRegistry.meter(feed.getTitle());
         try {
             SyndFeed rssFeed = new SyndFeedInput().build(
                     new XmlReader(new URL(feed.getUrl())));
@@ -42,7 +43,10 @@ public class RssFetcher implements Runnable {
             rssFeed.getEntries().parallelStream()
                     .map(this::mapToReport).filter(Objects::nonNull)
                     .filter(report -> database.reportNotExists(report.getLink()))
-                    .forEach(report -> database.insertReport(report));
+                    .forEach(report -> {
+                        database.insertReport(report);
+                        newReportsMeter.mark();
+                    });
         } catch (FeedException | IOException e) {
             rssUpdater.cacheInvalidLink(feed.getId());
             logger.error(e.getMessage());
@@ -73,9 +77,5 @@ public class RssFetcher implements Runnable {
         } catch (MalformedURLException | BoilerpipeProcessingException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    public String getThreadName() {
-        return feed.getTitle() + "Fetcher";
     }
 }

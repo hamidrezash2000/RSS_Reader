@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.Optional;
 
 public class SearchQuery {
-    Optional<String> title = Optional.empty();
-    Optional<String> description = Optional.empty();
-    Optional<Date> lowerBound = Optional.empty(), upperBound = Optional.empty();
-    Optional<Integer> feedId = Optional.empty();
+    private Optional<String> title = Optional.empty();
+    private Optional<String> description = Optional.empty();
+    private Optional<Date> lowerBound = Optional.empty(), upperBound = Optional.empty();
+    private Optional<Integer> feedId = Optional.empty();
 
     public String generateQuery() {
         StringBuilder res = new StringBuilder("SELECT feedId, title, link, pubDate, description FROM reports WHERE ");

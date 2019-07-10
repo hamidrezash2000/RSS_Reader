@@ -6,7 +6,6 @@ import in.nimbo.database.SearchQuery;
 import in.nimbo.model.Feed;
 import in.nimbo.model.Report;
 
-
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.time.Instant;

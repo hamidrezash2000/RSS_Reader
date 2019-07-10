@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 
 
 public class RssUpdater extends Thread {
-    private static final MetricRegistry metricRegistry = new MetricRegistry();
-    public static final Meter fetcherMetric = metricRegistry.meter("RssFetcher");
-    private static final int SECONDS_BETWEEN_UPDATE = 3;
-    private static final int SECONDS_BETWEEN_FEED_CLEANING = 6;
+    public static final MetricRegistry rssUpdateMetricRegistry = new MetricRegistry();
+    private static final Meter feedsUpdatedMeter = rssUpdateMetricRegistry.meter("تعداد سایت های اپدیت شده");
+    private static final int SECONDS_BETWEEN_UPDATE = 30;
+    private static final int SECONDS_BETWEEN_FEED_CLEANING = 300;
     public HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 
@@ -28,10 +28,6 @@ public class RssUpdater extends Thread {
 
     @Override
     public void run() {
-        Slf4jReporter reporter = Slf4jReporter.forRegistry(metricRegistry).build();
-        reporter.start(5, TimeUnit.SECONDS);
-        reporter.report();
-
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "Scheduled Rss Updater"));
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(10);
@@ -39,6 +35,7 @@ public class RssUpdater extends Thread {
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
             Database.getInstance().getAllFeeds().forEach(feed -> {
                 threadPoolExecutor.submit(new RssFetcher(database, feed, this));
+                feedsUpdatedMeter.mark();
             });
         }, 0, SECONDS_BETWEEN_UPDATE, TimeUnit.SECONDS);
 
