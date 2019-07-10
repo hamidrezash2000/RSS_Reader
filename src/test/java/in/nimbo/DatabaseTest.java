@@ -164,4 +164,41 @@ public class DatabaseTest {
         assertTrue(searchedReports.containsAll(Arrays.asList(sameReport1, sameReport2))
                 && !searchedReports.contains(differentReport));
     }
+
+    @Test
+    public void searchReportsByTitle() {
+        database.insertFeed(new Feed("Test Title", "http://TestURL.URL"));
+        int feedId = database.getAllFeeds().get(0).getId();
+        Report sameReport1 = new Report(feedId, "Test Title Same 1", "http://TestURL1.URL");
+        Report sameReport2 = new Report(feedId, "Test Title Same 2", "http://TestURL2.URL");
+        Report differentReport = new Report(feedId, "Test Title Different", "http://TestURL3.URL");
+        database.insertReport(sameReport1);
+        database.insertReport(sameReport2);
+        database.insertReport(differentReport);
+        SearchQuery searchQuery = new SearchQuery();
+        searchQuery.setTitle("Test Title Same");
+        final List<Report> searchedReports = database.searchReports(searchQuery);
+        assertTrue(searchedReports.containsAll(Arrays.asList(sameReport1, sameReport2))
+                && !searchedReports.contains(differentReport));
+    }
+
+    @Test
+    public void searchReportsByDescription() {
+        database.insertFeed(new Feed("Test Title", "http://TestURL.URL"));
+        int feedId = database.getAllFeeds().get(0).getId();
+        Report sameReport1 = new Report(feedId, "Test Title Same 1", "http://TestURL1.URL");
+        sameReport1.setDescription("Test Desc Same 1");
+        Report sameReport2 = new Report(feedId, "Test Title Same 2", "http://TestURL2.URL");
+        sameReport2.setDescription("Test Desc Same 1");
+        Report differentReport = new Report(feedId, "Test Title Different", "http://TestURL3.URL");
+        differentReport.setDescription("Test Desc Different");
+        database.insertReport(sameReport1);
+        database.insertReport(sameReport2);
+        database.insertReport(differentReport);
+        SearchQuery searchQuery = new SearchQuery();
+        searchQuery.setDescription("Test Desc Same");
+        final List<Report> searchedReports = database.searchReports(searchQuery);
+        assertTrue(searchedReports.containsAll(Arrays.asList(sameReport1, sameReport2))
+                && !searchedReports.contains(differentReport));
+    }
 }

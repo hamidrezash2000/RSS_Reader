@@ -11,7 +11,6 @@ public class SearchQuery {
     Optional<Integer> feedId = Optional.empty();
 
     public String generateQuery() {
-        // todo for an empty condition this query is not valid
         StringBuilder res = new StringBuilder("SELECT feedId, title, link, pubDate, description FROM reports WHERE ");
         boolean anyConditionAdded = false;
         if (title.isPresent()) {
@@ -36,37 +35,17 @@ public class SearchQuery {
         return res.toString();
     }
 
-    public String getTitle() {
-        return title.get();
-    }
-
     public void setTitle(String title) {
         this.title = Optional.ofNullable(title);
-    }
-
-    public String getDescription() {
-        return description.get();
     }
 
     public void setDescription(String description) {
         this.description = Optional.ofNullable(description);
     }
 
-    public Date getLowerBound() {
-        return lowerBound.get();
-    }
-
     public void setLowerAndUpperBound(Date lowerBound, Date upperBound) {
         this.lowerBound = Optional.ofNullable(lowerBound);
         this.upperBound = Optional.ofNullable(upperBound);
-    }
-
-    public Date getUpperBound() {
-        return upperBound.get();
-    }
-
-    public int getFeedId() {
-        return feedId.get();
     }
 
     public void setFeedId(int feedId) {
