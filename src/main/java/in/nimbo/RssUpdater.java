@@ -17,7 +17,7 @@ public class RssUpdater extends Thread {
     public static final MetricRegistry rssUpdateMetricRegistry = new MetricRegistry();
     private static final Meter feedsUpdatedMeter = rssUpdateMetricRegistry.meter("تعداد سایت های اپدیت شده");
     private static final int SECONDS_BETWEEN_UPDATE = 30;
-    private static final int SECONDS_BETWEEN_FEED_CLEANING = 300;
+    private static final int SECONDS_BETWEEN_FEED_CLEANING = 120;
     public HashMap<Integer, Integer> invalidLinksCache;
     private Database database;
 

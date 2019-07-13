@@ -79,22 +79,8 @@ public class DatabaseTest {
         Report similarReport = new Report(feedId, "Test Duplicate Report 2", "http://Test1.com");
         Report differentReport = new Report(feedId, "Test Duplicate Report 3", "http://Test2.com");
         database.insertReport(report);
-        assertFalse(database.reportNotExists(similarReport.getLink()));
-        assertTrue(database.reportNotExists(differentReport.getLink()));
-    }
-
-    @Test
-    public void getSimilarReportsTest() {
-        database.insertFeed(new Feed("تیتر تست فارسی", "http://TestURL.URL"));
-        int feedId = database.getAllFeeds().get(0).getId();
-        Report similarReport1 = new Report(feedId, "Test1 Similarity", "http://Test1.com");
-        Report similarReport2 = new Report(feedId, "Test2 Similarity", "http://Test1.com");
-        Report differentReport = new Report(feedId, "Test3 Similarity", "http://Test2.com");
-        database.insertReport(similarReport1);
-        database.insertReport(similarReport2);
-        database.insertReport(differentReport);
-        List<Report> similarReports = database.getSimilarReports(similarReport1.getLink());
-        assertEquals(similarReports, Arrays.asList(similarReport1, similarReport2));
+        assertTrue(database.reportExists(similarReport.getLink()));
+        assertFalse(database.reportExists(differentReport.getLink()));
     }
 
     @Test

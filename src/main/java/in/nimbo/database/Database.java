@@ -80,11 +80,10 @@ public class Database {
         }
     }
 
-    public List<Report> getSimilarReports(String link) {
+    public List<Report> getLastHourReports() {
         try (Connection con = sql2o.open();
-             Query query = con.createQuery(QueryStatement.GET_SIMILAR_REPORTS)) {
-            return query.addParameter("link", link)
-                    .executeAndFetch(Report.class);
+             Query query = con.createQuery(QueryStatement.GET_LASTHOUR_REPORTS)) {
+            return query.executeAndFetch(Report.class);
         } catch (Sql2oException e) {
             logger.error(e.getMessage());
             return new ArrayList<>();
@@ -131,8 +130,14 @@ public class Database {
         }
     }
 
-    public boolean reportNotExists(String link) {
-        return getSimilarReports(link).size() == 0;
+    public boolean reportExists(String link) {
+        try (Connection con = sql2o.open();
+             Query query = con.createQuery(QueryStatement.GET_SIMILAR_REPORTS)) {
+            return query.addParameter("link", link)
+                    .executeAndFetch(Report.class).size() > 0;
+        } catch (Sql2oException e) {
+            logger.error(e.getMessage());
+            return false;
+        }
     }
-
 }

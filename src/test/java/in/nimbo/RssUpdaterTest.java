@@ -61,6 +61,11 @@ public class RssUpdaterTest {
         for (int i = 0; i < 4; i++) {
             rssFetcher.run();
         }
+        try {
+            Thread.sleep(120000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(rssUpdater.invalidLinksCache.containsKey(feed.getId())
                 && rssUpdater.invalidLinksCache.get(feed.getId()) == 4);
         rssUpdater.handleInvalidLinks();
