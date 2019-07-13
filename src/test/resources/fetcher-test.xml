@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Feed Title</title>
+        <link>https://www.farsnews.com/</link>
+        <description>تازه ترین اخبار ورزشی، حوادث، سیاسی و اقتصادی ایران، افغانستان، آسیای مرکزی و سایر مناطق جهان را در
+            اینجا بخوانید. می توانید کلیپ های صوتی و تصویری را از خبرگزاری فارس دریافت کنید
+        </description>
+        <copyright>(c) 2019 Farsnews.com</copyright>
+        <item>
+            <title>Title Test 1</title>
+            <link>http://test1.test</link>
+            <description/>
+            <pubDate>Tue, 09 Jul 2019 08:24:18 GMT</pubDate>
+        </item>
+        <item>
+            <title>Title Test 2</title>
+            <link>http://test2.test</link>
+            <description/>
+            <pubDate>Tue, 09 Jul 2019 08:24:01 GMT</pubDate>
+        </item>
+    </channel>
+</rss>

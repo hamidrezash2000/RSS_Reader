@@ -1,6 +1,6 @@
 package in.nimbo.database;
 
-public class Query {
+public class QueryStatement {
     public static final String INSERT_FEED = "insert into feeds(title, url) values (:title, :url)";
     public static final String REMOVE_FEED = "DELETE FROM feeds WHERE id=:id";
     public static final String REMOVE_FEEDS_REPORTS = "DELETE FROM reports WHERE feedId=:feedId";
@@ -8,4 +8,5 @@ public class Query {
     public static final String GET_ALL_FEEDS = "SELECT id, title, url FROM feeds";
     public static final String GET_ALL_REPORTS = "SELECT feedId, title, link, description, pubDate FROM reports";
     public static final String GET_SIMILAR_REPORTS = "SELECT feedId, title, link FROM reports WHERE link = :link";
+    public static final String GET_LASTHOUR_REPORTS = "SELECT feedId, title, link FROM reports WHERE pubDate >= DATE_SUB(NOW(),INTERVAL 1 HOUR)";
 }

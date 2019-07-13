@@ -5,7 +5,6 @@ import in.nimbo.database.Database;
 import in.nimbo.database.SearchQuery;
 import in.nimbo.model.Feed;
 import in.nimbo.model.Report;
-import org.apache.log4j.Logger;
 
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
@@ -18,10 +17,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleManager extends Thread {
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_BLUE = "\u001B[34m";
+    private static final String ANSI_PURPLE = "\u001B[35m";
+    private static final String ANSI_CYAN = "\u001B[36m";
     private static final String URL_REGEX = "(?<link>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*))";
     private static final String DATE_REGEX = "(?<year>\\d{2,4})/(?<month>\\d{1,2})/(?<day>\\d{1,2})";
-    private static Logger logger = Logger.getLogger(ConsoleManager.class);
+    private static final String BOLD = "\033[0;1m";
     private Scanner scanner = new Scanner(System.in);
+    private Database database;
+
+    public ConsoleManager(Database database) {
+        this.database = database;
+    }
 
     @Override
     public void run() {
@@ -30,7 +41,7 @@ public class ConsoleManager extends Thread {
             if (command.matches("print feeds")) {
                 printFeeds();
             } else if (command.matches("print reports")) {
-                printReports(Database.getInstance().getAllReports());
+                printReports(database.getAllReports());
             } else if (command.matches("add " + URL_REGEX + " to feeds")) {
                 addFeed(command);
             } else if (command.matches("remove \\d+ from feeds")) {
@@ -44,8 +55,9 @@ public class ConsoleManager extends Thread {
     private void removeFeed(String command) {
         Matcher matcher = Pattern.compile("remove (?<feedId>\\d+) from feeds").matcher(command);
         if (matcher.find()) {
-            Database.getInstance().removeFeedWithReports(
-                    Integer.valueOf(matcher.group("feedId")));
+            Integer feedId = Integer.valueOf(matcher.group("feedId"));
+            database.removeFeedWithReports(feedId);
+            System.out.println(ANSI_RED + String.format("Feed with ID:%d removed", feedId) + ANSI_RESET);
         }
     }
 
@@ -66,8 +78,6 @@ public class ConsoleManager extends Thread {
                 } else if (key.equalsIgnoreCase("pubDate")) {
                     String dateLowerBoundString = value.split(">")[0];
                     String dateUpperBoundString = value.split(">")[1];
-                    System.out.println(dateLowerBoundString);
-                    System.out.println(dateUpperBoundString);
                     Matcher dateLowerBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateLowerBoundString);
                     Matcher dateUpperBoundMatcher = Pattern.compile(DATE_REGEX).matcher(dateUpperBoundString);
                     if (dateLowerBoundMatcher.find() && dateUpperBoundMatcher.find()){
@@ -88,27 +98,28 @@ public class ConsoleManager extends Thread {
                 }
             }
         }
-        printReports(Database.getInstance().searchReports(searchQuery));
+        printReports(database.searchReports(searchQuery));
     }
 
     private void addFeed(String command) {
         Matcher matcher = Pattern.compile("add " + URL_REGEX + " to feeds").matcher(command);
         if (matcher.find()) {
-            Database.getInstance().insertFeed(
-                    new Feed(matcher.group("link")));
+            Feed feed = new Feed(matcher.group("link"));
+            database.insertFeed(feed);
+            System.out.println(ANSI_GREEN + String.format("Feed %s added", feed.getTitle()) + ANSI_RESET);
         }
     }
 
     public void printFeeds() {
-        List<Feed> feeds = Database.getInstance().getAllFeeds();
-        System.out.println(":: All Feeds ::");
+        List<Feed> feeds = database.getAllFeeds();
+        System.out.println(ANSI_YELLOW + BOLD + ":: All Feeds ::" + ANSI_RESET);
         feeds.forEach(feed -> {
-            System.out.println(String.format("%d :: %s", feed.getId(), feed.getTitle()));
+            System.out.println(ANSI_BLUE + String.format("%d :: %s", feed.getId(), feed.getTitle()) + ANSI_RESET);
         });
     }
 
     public void printReports(List<Report> reports) {
-        System.out.println(":: Reports ::");
+        System.out.println(ANSI_YELLOW  + BOLD + ":: Reports ::" + ANSI_RESET);
         for (int i = 0; i < reports.size(); i++) {
             PersianDate persianDate = PersianDate.fromGregorian(
                     reports.get(i).getPubDate().toInstant()
@@ -116,12 +127,12 @@ public class ConsoleManager extends Thread {
 
             String time = getTimeOfDate(reports.get(i).getPubDate());
 
-            System.out.println(String.format("%d :: %s :: %s %s", (i + 1), reports.get(i).getTitle(), persianDate, time));
+            System.out.println(ANSI_PURPLE  + BOLD + String.format("%d :: %s :: %s %s", (i + 1), reports.get(i).getTitle(), persianDate, time) + ANSI_RESET);
             if (reports.get(i).getDescription() != null)
                 if (reports.get(i).getDescription().length() > 100)
-                    System.out.println(String.format("\t%s", reports.get(i).getDescription().substring(0, 100) + " ..."));
+                    System.out.println(ANSI_CYAN + String.format("\t%s", reports.get(i).getDescription().substring(0, 100) + " ...") + ANSI_RESET);
                 else
-                    System.out.println(String.format("\t%s", reports.get(i).getDescription()));
+                    System.out.println(ANSI_CYAN + String.format("\t%s", reports.get(i).getDescription()) + ANSI_RESET);
         }
     }
 
@@ -131,5 +142,4 @@ public class ConsoleManager extends Thread {
         simpleDateFormat.format(date, timeBuffer, new FieldPosition(0));
         return timeBuffer.toString();
     }
-
 }
