@@ -2,7 +2,6 @@ package in.nimbo;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Slf4jReporter;
 import in.nimbo.database.Database;
 
 import java.util.HashMap;

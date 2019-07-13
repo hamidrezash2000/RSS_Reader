@@ -11,7 +11,6 @@ import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import in.nimbo.database.Database;
 import in.nimbo.model.Feed;
 import in.nimbo.model.Report;
-import manifold.ext.api.Jailbreak;
 import net.ricecode.similarity.JaroWinklerStrategy;
 import net.ricecode.similarity.SimilarityStrategy;
 import net.ricecode.similarity.StringSimilarityService;
